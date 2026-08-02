@@ -21,7 +21,7 @@ jobs:
         php-version: '8.2'
         
     - name: 📦 Install Composer Dependencies
-      run: composer install --no-dev --optimize-autoloader
+      run: composer install --no-dev --optimize-autoloader --ignore-platform-reqs
       
     - name: 📂 Sync files to cPanel
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
