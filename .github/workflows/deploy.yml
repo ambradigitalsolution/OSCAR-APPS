@@ -35,6 +35,7 @@ jobs:
           **/.git*/**
           **/.github/**
           **/node_modules/**
+          **/vendor/**
           .env.example
           README.md
           *.zip
