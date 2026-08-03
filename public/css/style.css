@@ -1469,7 +1469,38 @@ ul {
     .nav-menu {
         display: none;
     }
-    
+
+    .header-container {
+        padding: 0 12px;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+        gap: 4px;
+    }
+
+    .logo-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .header-actions {
+        gap: 6px;
+    }
+
+    .user-profile-text {
+        display: none;
+    }
+
+    .user-profile {
+        padding: 0 !important;
+        background: transparent !important;
+    }
+
+    .user-profile-wrapper {
+        gap: 6px !important;
+    }
+
     .header-actions .btn {
         padding: 6px 12px;
         font-size: 0.85rem;

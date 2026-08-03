@@ -23,12 +23,12 @@
             </a>
             
             <!-- User Profile -->
-            <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="user-profile-wrapper" style="display: flex; align-items: center; gap: 12px;">
                 <div class="user-profile" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 4px 12px; border-radius: 99px; background: #f1f5f9;">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #00B050; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; text-transform: uppercase;">
+                    <div class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #00B050; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; text-transform: uppercase;">
                         {{ substr(request()->query('role', 'Member'), 0, 1) }}
                     </div>
-                    <span style="font-size: 14px; font-weight: 600; color: #1e293b; text-transform: capitalize;">
+                    <span class="user-profile-text" style="font-size: 14px; font-weight: 600; color: #1e293b; text-transform: capitalize;">
                         {{ request()->query('role', 'Member') }}
                     </span>
 
