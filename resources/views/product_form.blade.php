@@ -610,11 +610,15 @@
             .v-table-wrapper { overflow-x: auto; }
         }
         @media (max-width: 600px) {
-            .header { padding: 0 16px; }
-            .container { padding: 0 16px; gap: 16px; }
-            .card-header { padding: 16px; font-size: 16px; }
-            .card-body { padding: 16px; }
-            .btn { padding: 8px 12px; font-size: 13px; }
+            .header { padding: 0 12px; }
+            .header-left { gap: 8px; }
+            .page-title { font-size: 15px; white-space: nowrap; }
+            .header-right { gap: 8px; }
+            .container { padding: 0 12px; gap: 16px; margin-top: 76px; }
+            .card-header { padding: 14px; font-size: 15px; }
+            .card-body { padding: 14px; }
+            .btn { padding: 6px 10px; font-size: 12px; white-space: nowrap; }
+            .btn-outline-white { display: none; } /* Hide secondary button on mobile to save space */
         }
     </style>
 </head>
