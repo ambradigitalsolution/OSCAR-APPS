@@ -248,7 +248,7 @@
             <div class="page-title">Pengaturan Banner</div>
         </div>
         <div class="header-right">
-            <a href="/seller?role={{ request('role') ?? 'owner' }}" class="btn btn-white">Simpan Perubahan</a>
+            <button type="submit" form="bannerForm" class="btn btn-white">Simpan Perubahan</button>
         </div>
     </header>
 
@@ -256,10 +256,13 @@
         <!-- MAIN FORM -->
         <main class="form-main">
             
-            <div class="preview-alert">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Halaman ini adalah prototipe (mockup). Saat ini pengaturan banner belum terhubung ke database.
-            </div>
+            @if(session('success'))
+                <div style="background:#d4edda; color:#155724; padding:12px; border-radius:8px; margin-bottom:20px; font-weight:bold;">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <form id="bannerForm" action="/settings/banner?role={{ request('role') ?? 'owner' }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
             <!-- 1. Banner Utama -->
             <div class="card">
@@ -268,29 +271,30 @@
                     
                     <div class="form-group">
                         <label class="form-label">Badge Label</label>
-                        <input type="text" class="form-input" value="SYSTEM UPDATE">
+                        <input type="text" name="banners[slide_1][badge]" class="form-input" value="{{ $banners['slide_1']->badge ?? 'SYSTEM UPDATE' }}">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Judul Banner Utama (Baris 1)</label>
-                        <input type="text" class="form-input" value="ERP Dashboard">
+                        <input type="text" name="banners[slide_1][title_1]" class="form-input" value="{{ $banners['slide_1']->title_1 ?? 'ERP Dashboard' }}">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Judul Banner Utama (Baris 2 - Warna Berbeda)</label>
-                        <input type="text" class="form-input" value="Versi 2.0">
+                        <input type="text" name="banners[slide_1][title_2]" class="form-input" value="{{ $banners['slide_1']->title_2 ?? 'Versi 2.0' }}">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Subjudul (Deskripsi)</label>
-                        <input type="text" class="form-input" value="Pembaruan sistem manajemen inventaris terpadu untuk efisiensi operasional.">
+                        <input type="text" name="banners[slide_1][description]" class="form-input" value="{{ $banners['slide_1']->description ?? 'Pembaruan sistem manajemen inventaris terpadu untuk efisiensi operasional.' }}">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 800 x 600px.</div>
                         <div class="photo-box">
-                            <img src="{{ asset('assets/server.png') }}" alt="Preview">
+                            <img src="{{ isset($banners['slide_1']->image) ? asset($banners['slide_1']->image) : asset('assets/server.png') }}" alt="Preview">
+                            <input type="file" name="banners[slide_1][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
                         </div>
                     </div>
 
@@ -303,17 +307,18 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label">Badge Label</label>
-                        <input type="text" class="form-input" value="MANAJEMEN ASET">
+                        <input type="text" name="banners[slide_2][badge]" class="form-input" value="{{ $banners['slide_2']->badge ?? 'MANAJEMEN ASET' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Judul Banner Utama</label>
-                        <input type="text" class="form-input" value="Kontrol Penuh Semua Gudang">
+                        <input type="text" name="banners[slide_2][title_1]" class="form-input" value="{{ $banners['slide_2']->title_1 ?? 'Kontrol Penuh Semua Gudang' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 800 x 600px.</div>
                         <div class="photo-box">
-                            <img src="{{ asset('assets/pc.png') }}" alt="Preview" style="background:#bbf7d0;">
+                            <img src="{{ isset($banners['slide_2']->image) ? asset($banners['slide_2']->image) : asset('assets/pc.png') }}" alt="Preview" style="background:#bbf7d0;">
+                            <input type="file" name="banners[slide_2][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
                         </div>
                     </div>
                 </div>
@@ -325,25 +330,26 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label">Badge Label</label>
-                        <input type="text" class="form-input" value="ALERT">
+                        <input type="text" name="banners[side_top][badge]" class="form-input" value="{{ $banners['side_top']->badge ?? 'ALERT' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Judul (Baris 1)</label>
-                        <input type="text" class="form-input" value="Stok">
+                        <input type="text" name="banners[side_top][title_1]" class="form-input" value="{{ $banners['side_top']->title_1 ?? 'Stok' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Judul (Baris 2)</label>
-                        <input type="text" class="form-input" value="Menipis">
+                        <input type="text" name="banners[side_top][title_2]" class="form-input" value="{{ $banners['side_top']->title_2 ?? 'Menipis' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Keterangan / Subjudul</label>
-                        <input type="text" class="form-input" value="12 Barang butuh restock">
+                        <input type="text" name="banners[side_top][description]" class="form-input" value="{{ $banners['side_top']->description ?? '12 Barang butuh restock' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 400 x 300px.</div>
                         <div class="photo-box" style="height: 150px;">
-                            <img src="{{ asset('assets/laptop.png') }}" alt="Preview" style="background:#e0f2fe; object-position: right bottom;">
+                            <img src="{{ isset($banners['side_top']->image) ? asset($banners['side_top']->image) : asset('assets/laptop.png') }}" alt="Preview" style="background:#e0f2fe; object-position: right bottom;">
+                            <input type="file" name="banners[side_top][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
                         </div>
                     </div>
                 </div>
@@ -355,93 +361,38 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label">Badge Label</label>
-                        <input type="text" class="form-input" value="REPORT">
+                        <input type="text" name="banners[side_bottom][badge]" class="form-input" value="{{ $banners['side_bottom']->badge ?? 'REPORT' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Judul (Baris 1)</label>
-                        <input type="text" class="form-input" value="Laporan">
+                        <input type="text" name="banners[side_bottom][title_1]" class="form-input" value="{{ $banners['side_bottom']->title_1 ?? 'Laporan' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Judul (Baris 2)</label>
-                        <input type="text" class="form-input" value="Bulanan">
+                        <input type="text" name="banners[side_bottom][title_2]" class="form-input" value="{{ $banners['side_bottom']->title_2 ?? 'Bulanan' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Keterangan / Subjudul</label>
-                        <input type="text" class="form-input" value="Status: Selesai">
+                        <input type="text" name="banners[side_bottom][description]" class="form-input" value="{{ $banners['side_bottom']->description ?? 'Status: Selesai' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 400 x 300px.</div>
                         <div class="photo-box" style="height: 150px;">
-                            <img src="{{ asset('assets/infokus.png') }}" alt="Preview" style="background:#0f172a; object-position: right bottom;">
+                            <img src="{{ isset($banners['side_bottom']->image) ? asset($banners['side_bottom']->image) : asset('assets/infokus.png') }}" alt="Preview" style="background:#0f172a; object-position: right bottom;">
+                            <input type="file" name="banners[side_bottom][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
                         </div>
                     </div>
                 </div>
             </div>
 
+            </form>
         </main>
     </div>
 
-    <input type="file" id="global-image-upload" accept="image/*" style="display: none;">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
     <script>
-        const photoBoxes = document.querySelectorAll('.photo-box');
-        const fileInput = document.getElementById('global-image-upload');
-        let activeBox = null;
-
-        photoBoxes.forEach(box => {
-            box.addEventListener('click', () => {
-                activeBox = box;
-                fileInput.click();
-            });
-        });
-
-        function formatBytes(bytes, decimals = 2) {
-            if (!+bytes) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-        }
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file || !activeBox) return;
-
-            const originalSize = file.size;
-            
-            // Tampilkan loading state sederhana di kotak
-            const img = activeBox.querySelector('img');
-            const originalSrc = img.src;
-            img.style.opacity = '0.5';
-            
-            new Compressor(file, {
-                quality: 0.75,
-                maxWidth: 1024,
-                maxHeight: 1024,
-                mimeType: 'image/webp', // Convert to WebP for best compression
-                success(result) {
-                    const compressedSize = result.size;
-                    
-                    // Show compressed preview
-                    img.src = URL.createObjectURL(result);
-                    img.style.opacity = '1';
-                    
-                    // Reset input
-                    fileInput.value = '';
-
-                    const percentSaved = Math.round(100 - (compressedSize/originalSize*100));
-                    alert(`✅ Gambar berhasil dipilih & dikompres otomatis!\n\nUkuran Asli: ${formatBytes(originalSize)}\nUkuran Setelah Dikompres: ${formatBytes(compressedSize)}\n\nSistem menghemat sekitar ${percentSaved}% memori server Anda!`);
-                },
-                error(err) {
-                    console.error(err.message);
-                    img.style.opacity = '1';
-                    alert('Gagal mengompres gambar. Pastikan file valid.');
-                },
-            });
-        });
+        // Form now handles file uploads natively. 
+        // Photo box interactions removed to prevent conflicts with native file input click.
     </script>
 </body>
 </html>

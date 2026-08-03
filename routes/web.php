@@ -342,12 +342,10 @@ Route::get('/product/detail', function () {
     return view('product_detail', compact('product', 'role'));
 });
 
-Route::get('/settings/banner', function () {
-    if (strtolower(request()->query('role', 'Member')) !== 'owner') {
-        return redirect('/');
-    }
-    return view('banner_settings');
-});
+use App\Http\Controllers\BannerController;
+
+Route::get('/settings/banner', [BannerController::class, 'index']);
+Route::post('/settings/banner', [BannerController::class, 'update']);
 
 Route::get('/settings/category', function () {
     if (strtolower(request()->query('role', 'Member')) !== 'owner') {
