@@ -119,7 +119,7 @@
         .tbl-filters{display:flex;align-items:center;padding:12px 16px;gap:8px;border-bottom:1px solid var(--tk-border);flex-wrap:wrap;}
         .f-input{border:1px solid var(--tk-border);padding:7px 10px;border-radius:4px;font-size:12px;width:220px;outline:none;transition:border 0.15s;}
         .f-input:focus{border-color:var(--tk-teal);}
-        .f-select{border:1px solid var(--tk-border);padding:7px 10px;border-radius:4px;font-size:12px;outline:none;background:var(--tk-white);color:var(--tk-text);cursor:pointer;}
+        .f-select{border:1px solid var(--tk-border);padding:7px 28px 7px 10px;border-radius:4px;font-size:12px;outline:none;background:var(--tk-white);color:var(--tk-text);cursor:pointer;}
         .f-spacer{flex:1;}
         .f-btn{padding:7px 12px;border:1px solid var(--tk-border);border-radius:4px;background:var(--tk-white);color:var(--tk-text-sec);font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-weight:500;transition:all 0.15s;}
         .f-btn:hover{background:#f8f9fa;color:var(--tk-text);}
@@ -219,7 +219,7 @@
             .header-divider{display:none;}
             .user-name{display:none;}
 
-            .main{padding:16px;}
+            .main{padding:16px 16px 80px 16px;}
 
             .pg-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
             .pg-tab{padding:8px 12px;font-size:12px;white-space:nowrap;}
@@ -239,12 +239,13 @@
             .tbl-tabs{padding:0 12px;gap:0;}
             .tbl-tab{padding:10px 10px;font-size:12px;}
 
-            .tbl-filters{padding:10px 12px;gap:6px;}
-            .f-input{width:100%;flex:1;}
-            .f-select{flex:1;min-width:0;}
+            .tbl-filters{padding:10px 12px;gap:8px;flex-direction:column;align-items:stretch;}
+            .tbl-filters .f-input{width:100%;flex:unset;}
+            .tbl-filters .f-select{width:100%;flex:unset;min-width:0;}
             .f-spacer{display:none;}
 
-            .tbl-footer{flex-direction:column;gap:10px;align-items:stretch;text-align:center;}
+            .tbl-footer{flex-direction:column;gap:12px;align-items:center;text-align:center;}
+            .tbl-footer > div { justify-content: center; width: 100%; }
         }
 
         @media(max-width:480px){
