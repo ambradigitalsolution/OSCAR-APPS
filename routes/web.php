@@ -66,17 +66,6 @@ Route::get('/dashboard', function () {
     ];
 
     $products = Product::all();
-    return view('home', ['role' => $role, 'categories' => $categories, 'products' => $products]);
-});
-        [
-            'name' => 'Furniture',
-            'count' => '37 Unit',
-            'icon' => 'assets/kursi.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-    ];
-
-    $products = Product::all();
 
     $features = [
         [
