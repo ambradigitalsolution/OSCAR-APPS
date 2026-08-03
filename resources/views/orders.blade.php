@@ -108,7 +108,7 @@
         .tbl-filters{display:flex;align-items:center;padding:12px 16px;gap:8px;border-bottom:1px solid var(--tk-border);flex-wrap:wrap;}
         .f-input{border:1px solid var(--tk-border);padding:7px 10px;border-radius:4px;font-size:12px;width:220px;outline:none;transition:border 0.15s;}
         .f-input:focus{border-color:var(--tk-teal);}
-        .f-select{border:1px solid var(--tk-border);padding:7px 10px;border-radius:4px;font-size:12px;outline:none;background:var(--tk-white);color:var(--tk-text);cursor:pointer;}
+        .f-select{border:1px solid var(--tk-border);padding:7px 28px 7px 10px;border-radius:4px;font-size:12px;outline:none;background:var(--tk-white);color:var(--tk-text);cursor:pointer;}
         .f-spacer{flex:1;}
         .f-btn{padding:7px 12px;border:1px solid var(--tk-border);border-radius:4px;background:var(--tk-white);color:var(--tk-text-sec);font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-weight:500;transition:all 0.15s;}
         .f-btn:hover{background:#f8f9fa;color:var(--tk-text);}

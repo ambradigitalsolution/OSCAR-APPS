@@ -67,29 +67,40 @@
     }
 
     @media (max-width: 850px) {
+        .product-detail-section {
+            padding: 16px 16px 80px 16px;
+        }
+        .breadcrumb {
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
         .bento-product-grid {
             grid-template-columns: 1fr;
             gap: 16px;
         }
         .bento-card {
-            padding: 24px;
-            border-radius: 20px;
+            padding: 16px;
+            border-radius: 16px;
         }
         .bento-gallery, .bento-info, .bento-checkout {
             grid-column: 1 / -1;
             order: unset;
         }
         .main-image-container {
-            border-radius: 16px;
+            border-radius: 12px;
         }
         .checkout-box {
             position: static;
         }
         .price-current {
-            font-size: 2rem;
+            font-size: 1.5rem;
         }
         .product-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
+        }
+        .desc-tabs {
+            overflow-x: auto;
+            white-space: nowrap;
         }
     }
 
