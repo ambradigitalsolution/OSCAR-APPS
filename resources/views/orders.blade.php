@@ -151,7 +151,7 @@
         /* Pagination */
         .tbl-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--tk-border);background:#fafbfc;}
         .tbl-footer-left{font-size:12px;color:var(--tk-text-sec);}
-        .pagination{display:flex;align-items:center;gap:4px;}
+        .pagination{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center;}
         .pg-btn{width:30px;height:30px;border:1px solid var(--tk-border);border-radius:4px;display:flex;align-items:center;justify-content:center;background:var(--tk-white);color:var(--tk-text-sec);cursor:pointer;font-size:12px;font-weight:500;transition:all 0.15s;}
         .pg-btn:hover{background:#f1f3f4;}
         .pg-btn.active{background:var(--tk-teal);color:#fff;border-color:var(--tk-teal);}

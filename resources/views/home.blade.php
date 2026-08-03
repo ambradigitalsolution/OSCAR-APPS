@@ -597,10 +597,10 @@
             @endforeach
         </div>
         <!-- Pagination UI -->
-          <div class="pagination-container" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 30px; font-family: 'Inter', sans-serif;">
+          <div class="pagination-container" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 30px; font-family: 'Inter', sans-serif;">
               <button style="border: 1px solid #cbd5e1; background: white; color: #475569; font-weight: 500; padding: 8px 16px; border-radius: 6px; cursor: pointer;">&laquo; Kembali</button>
               
-              <div style="display: flex; gap: 8px; align-items: center;">
+              <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; align-items: center;">
                   <button style="border: none; background: #0ea5e9; color: white; font-weight: 600; width: 36px; height: 36px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">1</button>
                   <button style="border: 1px solid #e2e8f0; background: white; color: #475569; font-weight: 500; width: 36px; height: 36px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">2</button>
                   <button style="border: 1px solid #e2e8f0; background: white; color: #475569; font-weight: 500; width: 36px; height: 36px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">3</button>
