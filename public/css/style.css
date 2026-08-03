@@ -1524,6 +1524,10 @@ ul {
         gap: 12px;
     }
     
+    .search-divider {
+        display: none !important;
+    }
+    
     .search-dropdown {
         border-left: none;
         padding-left: 0;

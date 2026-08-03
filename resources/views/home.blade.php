@@ -357,7 +357,7 @@
                 </svg>
                 <input type="text" id="searchInput" placeholder="Cari produk, kategori, atau lokasi..." oninput="performSearch()">
             </div>
-            <div style="width: 1px; height: 28px; background-color: #E2E8F0; margin: 0 12px;"></div>
+            <div class="search-divider" style="width: 1px; height: 28px; background-color: #E2E8F0; margin: 0 12px;"></div>
             <!-- Submit Button -->
             <button type="button" class="btn btn-primary" onclick="performSearch()">Cari Sekarang</button>
         </form>
