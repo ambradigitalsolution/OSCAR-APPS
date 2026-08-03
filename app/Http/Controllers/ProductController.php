@@ -93,4 +93,42 @@ class ProductController extends Controller
         $product = Product::create($data);
         return response()->json(['success' => true, 'message' => 'Produk berhasil ditambahkan', 'id' => $product->id]);
     }
+
+    public function toggleStatus(Request $request, $id)
+    {
+        $role = strtolower($request->query('role', 'member'));
+        if ($role !== 'owner') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['error' => 'Produk tidak ditemukan'], 404);
+        }
+
+        $status = $request->input('status');
+        if (in_array($status, ['Aktif', 'Nonaktif'])) {
+            $product->status = $status;
+            $product->save();
+            return response()->json(['success' => true, 'message' => 'Status produk berhasil diubah']);
+        }
+
+        return response()->json(['error' => 'Status tidak valid'], 400);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $role = strtolower($request->query('role', 'member'));
+        if ($role !== 'owner') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $product = Product::find($id);
+        if ($product) {
+            $product->delete();
+            return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus']);
+        }
+
+        return response()->json(['error' => 'Produk tidak ditemukan'], 404);
+    }
 }

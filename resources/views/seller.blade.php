@@ -418,9 +418,9 @@
                         </td>
                         <td>
                             @if($product->status == 'Aktif')
-                            <div class="status-dot s-aktif">Aktif</div>
+                                <div class="status-dot">Aktif</div>
                             @else
-                            <div class="status-dot s-habis">Habis</div>
+                                <div class="status-dot" style="color: var(--tk-red);"><span style="background: var(--tk-red); width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:4px;"></span>Nonaktif</div>
                             @endif
                         </td>
                         <td>
@@ -441,9 +441,9 @@
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                                 </div>
                                 <div class="dropdown-menu">
-                                    <div class="dropdown-item" onclick="changeStatus(this, 'Aktif')">Aktifkan</div>
-                                    <div class="dropdown-item" onclick="changeStatus(this, 'Nonaktif')">Nonaktifkan</div>
-                                    <div class="dropdown-item" style="color: #ef4444;" onclick="deleteItem(this)">Hapus</div>
+                                    <div class="dropdown-item" onclick="changeStatus({{ $product->id }}, 'Aktif', this)">Aktifkan</div>
+                                    <div class="dropdown-item" onclick="changeStatus({{ $product->id }}, 'Nonaktif', this)">Nonaktifkan</div>
+                                    <div class="dropdown-item" style="color: #ef4444;" onclick="deleteItem({{ $product->id }}, this)">Hapus</div>
                                 </div>
                                 @endif
                             </div>
@@ -485,9 +485,9 @@
                     </div>
                     <div class="m-card-footer">
                         @if($product->status == 'Aktif')
-                        <div class="m-card-status s-aktif">Aktif</div>
+                            <div class="m-card-status">Aktif</div>
                         @else
-                        <div class="m-card-status s-habis">Habis</div>
+                            <div class="m-card-status" style="color: var(--tk-red);"><span style="background: var(--tk-red); width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:4px;"></span>Nonaktif</div>
                         @endif
                         <div class="act-cell">
                             @if($role == 'owner')
@@ -500,8 +500,9 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                             </div>
                             <div class="dropdown-menu" style="bottom: 100%; top: auto; margin-bottom: 4px;">
-                                <div class="dropdown-item" onclick="changeStatus(this, 'Aktif')">Aktifkan</div>
-                                <div class="dropdown-item" onclick="changeStatus(this, 'Nonaktif')">Nonaktifkan</div>
+                                <div class="dropdown-item" onclick="changeStatus({{ $product->id }}, 'Aktif', this)">Aktifkan</div>
+                                <div class="dropdown-item" onclick="changeStatus({{ $product->id }}, 'Nonaktif', this)">Nonaktifkan</div>
+                                <div class="dropdown-item" style="color: #ef4444;" onclick="deleteItem({{ $product->id }}, this)">Hapus</div>
                             </div>
                             @endif
                         </div>
@@ -551,15 +552,49 @@
         }
     });
 
-    function changeStatus(el, status) {
-        alert('Status produk berhasil diubah menjadi: ' + status);
-        el.closest('.dropdown-menu').classList.remove('show');
+    function changeStatus(id, status, el) {
+        if (confirm('Ubah status produk menjadi ' + status + '?')) {
+            fetch('/product/toggle-status/' + id + '?role={{ request('role') ?? "owner" }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ status: status })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    alert('Status produk berhasil diubah menjadi: ' + status);
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(err => console.error(err));
+            el.closest('.dropdown-menu').classList.remove('show');
+        }
     }
 
-    function deleteItem(el) {
+    function deleteItem(id, el) {
         if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
-            const row = el.closest('.product-row');
-            if (row) row.remove();
+            fetch('/product/delete/' + id + '?role={{ request('role') ?? "owner" }}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    alert('Produk berhasil dihapus');
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(err => console.error(err));
             el.closest('.dropdown-menu').classList.remove('show');
         }
     }
