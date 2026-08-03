@@ -23,7 +23,7 @@
             </a>
             
             <!-- User Profile -->
-            <div class="user-profile-wrapper" style="display: flex; align-items: center; gap: 12px;">
+            <div class="user-profile-wrapper" style="display: flex; align-items: center; gap: 12px; position: relative;">
                 <div class="user-profile" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 4px 12px; border-radius: 99px; background: #f1f5f9;">
                     <div class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #00B050; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; text-transform: uppercase;">
                         {{ substr(request()->query('role', 'Member'), 0, 1) }}
@@ -31,7 +31,16 @@
                     <span class="user-profile-text" style="font-size: 14px; font-weight: 600; color: #1e293b; text-transform: capitalize;">
                         {{ request()->query('role', 'Member') }}
                     </span>
+                </div>
 
+                <!-- Profile Dropdown -->
+                <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; width: 250px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 16px; z-index: 50;">
+                    <div style="font-weight: 700; color: #0f172a; font-size: 1rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="ddName">Memuat...</div>
+                    <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="ddEmail">...</div>
+                    <div style="height: 1px; background: #e2e8f0; margin-bottom: 12px;"></div>
+                    <div style="font-size: 0.85rem; color: #334155; margin-bottom: 8px;"><strong>Mitra:</strong> <span id="ddMitra">-</span></div>
+                    <div style="font-size: 0.85rem; color: #334155; margin-bottom: 16px;"><strong>WhatsApp:</strong> <span id="ddWA">-</span></div>
+                    <a href="/" onclick="localStorage.removeItem('currentUser')" style="display: block; text-align: center; background: #fee2e2; color: #ef4444; text-decoration: none; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: background 0.2s;">Keluar Akun</a>
                 </div>
                 
                 <!-- Seller Center Link -->
@@ -68,6 +77,43 @@
         updateCartBadge();
         // Listen to storage events to update badge across tabs
         window.addEventListener('storage', updateCartBadge);
+
+        // User Profile logic
+        let currentUser = null;
+        try { currentUser = JSON.parse(localStorage.getItem('currentUser')); } catch(e) {}
+        
+        const userAvatar = document.querySelector('.user-avatar');
+        const userText = document.querySelector('.user-profile-text');
+        
+        if (currentUser && currentUser.name) {
+            if(userAvatar) userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            if(userText) userText.textContent = currentUser.name;
+            
+            const ddName = document.getElementById('ddName');
+            const ddEmail = document.getElementById('ddEmail');
+            const ddMitra = document.getElementById('ddMitra');
+            const ddWA = document.getElementById('ddWA');
+            
+            if(ddName) ddName.textContent = currentUser.name;
+            if(ddEmail) ddEmail.textContent = currentUser.email;
+            if(ddMitra) ddMitra.textContent = currentUser.mitra || '-';
+            if(ddWA) ddWA.textContent = currentUser.whatsapp || '-';
+        }
+
+        const userProfile = document.querySelector('.user-profile');
+        const profileDropdown = document.getElementById('profileDropdown');
+        if (userProfile && profileDropdown) {
+            userProfile.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.style.display = profileDropdown.style.display === 'none' ? 'block' : 'none';
+            });
+            document.addEventListener('click', () => {
+                profileDropdown.style.display = 'none';
+            });
+            profileDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     });
 
     function updateCartBadge() {

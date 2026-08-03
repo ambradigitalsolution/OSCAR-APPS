@@ -407,12 +407,21 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            if (email === 'owner@oscar.com' && password === 'admin123') {
+            let regUser = null;
+            try { regUser = JSON.parse(localStorage.getItem('registeredUser')); } catch(e) {}
+
+            if (regUser && email === regUser.email && password === regUser.password) {
+                localStorage.setItem('currentUser', JSON.stringify(regUser));
+                window.location.href = '/dashboard?role=member';
+            }
+            else if (email === 'owner@oscar.com' && password === 'admin123') {
+                localStorage.setItem('currentUser', JSON.stringify({ name: 'Owner', email: 'owner@oscar.com', role: 'owner', mitra: 'Oscar Pusat', whatsapp: '-' }));
                 window.location.href = '/dashboard?role=owner';
             } else if (email === 'member@oscar.com' && password === 'user123') {
+                localStorage.setItem('currentUser', JSON.stringify({ name: 'Member', email: 'member@oscar.com', role: 'member', mitra: 'Mitra Default', whatsapp: '-' }));
                 window.location.href = '/dashboard?role=member';
             } else {
-                alert('Email atau password salah! \n\nGunakan:\nowner@oscar.com / admin123\nmember@oscar.com / user123');
+                alert('Email atau password salah! \n\nAtau gunakan Akun Demo:\nowner@oscar.com / admin123\nmember@oscar.com / user123');
             }
         });
     </script>

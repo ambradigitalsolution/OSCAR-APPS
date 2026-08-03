@@ -283,7 +283,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-login" onclick="event.preventDefault(); alert('Pendaftaran berhasil! Silakan login dengan akun yang Anda daftarkan.'); window.location.href='/';">Daftar Sekarang</button>
+                <button type="button" class="btn-login" id="btn-register">Daftar Sekarang</button>
             </form>
 
             <div class="register-link">
@@ -291,6 +291,28 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('btn-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const mitra = document.getElementById('mitra').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if(!name || !email || !password) {
+                alert('Harap isi semua kolom!');
+                return;
+            }
+
+            const user = { name, whatsapp, mitra, email, password, role: 'member' };
+            localStorage.setItem('registeredUser', JSON.stringify(user));
+            
+            alert('Pendaftaran berhasil! Silakan login dengan akun yang Anda daftarkan.');
+            window.location.href='/';
+        });
+    </script>
 
 </body>
 </html>
