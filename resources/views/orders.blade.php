@@ -202,11 +202,12 @@
             .tbl-tab{padding:10px 10px;font-size:12px;}
 
             .tbl-filters{padding:10px 12px;gap:8px;flex-direction:column;align-items:stretch;}
-            .f-input{width:100%;flex:unset;}
-            .f-select{width:100%;flex:unset;min-width:0;}
+            .tbl-filters .f-input{width:100%;flex:unset;}
+            .tbl-filters .f-select{width:100%;flex:unset;min-width:0;}
             .f-spacer{display:none;}
 
-            .tbl-footer{flex-direction:column;gap:10px;align-items:stretch;text-align:center;}
+            .tbl-footer{flex-direction:column;gap:12px;align-items:center;text-align:center;}
+            .tbl-footer > div { justify-content: center; width: 100%; }
         }
 
         @media(max-width:480px){
