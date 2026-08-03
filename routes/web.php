@@ -347,12 +347,10 @@ use App\Http\Controllers\BannerController;
 Route::get('/settings/banner', [BannerController::class, 'index']);
 Route::post('/settings/banner', [BannerController::class, 'update']);
 
-Route::get('/settings/category', function () {
-    if (strtolower(request()->query('role', 'Member')) !== 'owner') {
-        return redirect('/');
-    }
-    return view('category_settings');
-});
+use App\Http\Controllers\CategoryController;
+
+Route::get('/settings/category', [CategoryController::class, 'index']);
+Route::post('/settings/category', [CategoryController::class, 'update']);
 
 Route::get('/cart', function () {
     $role = request()->query('role', 'member');
