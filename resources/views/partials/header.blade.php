@@ -40,7 +40,7 @@
                     <div style="height: 1px; background: #e2e8f0; margin-bottom: 12px;"></div>
                     <div style="font-size: 0.85rem; color: #334155; margin-bottom: 8px;"><strong>Mitra:</strong> <span id="ddMitra">-</span></div>
                     <div style="font-size: 0.85rem; color: #334155; margin-bottom: 16px;"><strong>WhatsApp:</strong> <span id="ddWA">-</span></div>
-                    <a href="/" onclick="localStorage.removeItem('currentUser')" style="display: block; text-align: center; background: #fee2e2; color: #ef4444; text-decoration: none; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: background 0.2s;">Keluar Akun</a>
+                    <button type="button" onclick="document.getElementById('profileDropdown').style.display='none'" style="display: block; width: 100%; text-align: center; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;">Kembali</button>
                 </div>
                 
                 <!-- Seller Center Link -->
