@@ -2,184 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-function getDummyProducts() {
-    return [
-        [
-            'id' => 1,
-            'name' => 'Laptop ASUS ROG Zephyrus G14 Ryzen 9 16GB 1TB SSD',
-            'price' => 'Rp16.500.000',
-            'price_max' => 'Rp18.500.000',
-            'stock' => 15,
-            'status' => 'Aktif',
-            'sales' => 125,
-            'views' => 2994,
-            'variants' => 3,
-            'warehouse' => 'Gudang A',
-            'sku' => 'LAP-ROG-001',
-            'date' => '01/07/2026',
-            'image' => 'assets/laptop.png',
-            'rating' => 4.9,
-            'discount' => '>54%'
-        ],
-        [
-            'id' => 2,
-            'name' => 'iPhone 13 128GB Garansi Resmi iBox Indonesia',
-            'price' => 'Rp8.750.000',
-            'price_max' => '',
-            'stock' => 96,
-            'status' => 'Aktif',
-            'sales' => 250,
-            'views' => 6400,
-            'variants' => 4,
-            'warehouse' => 'Gudang B',
-            'sku' => 'HP-IPH13-002',
-            'date' => '28/06/2026',
-            'image' => 'assets/hp.png',
-            'rating' => 4.8,
-            'discount' => '15%'
-        ],
-        [
-            'id' => 3,
-            'name' => 'Canon EOS M50 Mark II Mirrorless Camera Body Only',
-            'price' => 'Rp6.250.000',
-            'price_max' => 'Rp8.500.000',
-            'stock' => 73,
-            'status' => 'Aktif',
-            'sales' => 89,
-            'views' => 4567,
-            'variants' => 2,
-            'warehouse' => 'Gudang C',
-            'sku' => 'CAM-CAN-003',
-            'date' => '05/07/2026',
-            'image' => 'assets/camera.png',
-            'rating' => 4.7,
-            'discount' => '10%'
-        ],
-        [
-            'id' => 4,
-            'name' => 'Smart TV LED 4K Ultra HD 55 inch Frameless Design',
-            'price' => 'Rp3.500.000',
-            'price_max' => '',
-            'stock' => 0,
-            'status' => 'Habis',
-            'sales' => 45,
-            'views' => 1876,
-            'variants' => 1,
-            'warehouse' => 'Gudang A',
-            'sku' => 'TV-LED-004',
-            'date' => '12/06/2026',
-            'image' => 'assets/tv.png',
-            'rating' => 4.9,
-            'discount' => '25%'
-        ],
-        [
-            'id' => 5,
-            'name' => 'TWS Bluetooth Earphone v5.3 Noise Cancelling',
-            'price' => 'Rp250.000',
-            'price_max' => '',
-            'stock' => 508,
-            'status' => 'Aktif',
-            'sales' => 1240,
-            'views' => 9800,
-            'variants' => 3,
-            'warehouse' => 'Gudang D',
-            'sku' => 'MED-STN-005',
-            'date' => '27/07/2026',
-            'image' => 'assets/earphone.png',
-            'rating' => 4.8,
-            'discount' => '50%'
-        ],
-        [
-            'id' => 6,
-            'name' => 'Tablet Android 10 Inch RAM 4GB ROM 64GB',
-            'price' => 'Rp2.100.000',
-            'price_max' => 'Rp3.500.000',
-            'stock' => 230,
-            'status' => 'Aktif',
-            'sales' => 678,
-            'views' => 3210,
-            'variants' => 2,
-            'warehouse' => 'Gudang A',
-            'sku' => 'ACC-KBM-006',
-            'date' => '26/07/2026',
-            'image' => 'assets/tablet.png',
-            'rating' => 4.9,
-            'discount' => '40%'
-        ],
-        [
-            'id' => 7,
-            'name' => 'Server Rack Dell PowerEdge R740 2U 32GB RAM',
-            'price' => 'Rp42.000.000',
-            'price_max' => '',
-            'stock' => 5,
-            'status' => 'Aktif',
-            'sales' => 12,
-            'views' => 890,
-            'variants' => 1,
-            'warehouse' => 'Gudang B',
-            'sku' => 'SVR-DEL-007',
-            'date' => '03/07/2026',
-            'image' => 'assets/server.png',
-            'rating' => 5.0,
-            'discount' => ''
-        ],
-        [
-            'id' => 8,
-            'name' => 'Kursi Kantor Ergonomis Mesh High Back Adjustable',
-            'price' => 'Rp1.250.000',
-            'price_max' => 'Rp1.850.000',
-            'stock' => 42,
-            'status' => 'Aktif',
-            'sales' => 310,
-            'views' => 5430,
-            'variants' => 3,
-            'warehouse' => 'Gudang C',
-            'sku' => 'FRN-KRS-008',
-            'date' => '11/07/2026',
-            'image' => 'assets/kursi.png',
-            'rating' => 4.6,
-            'discount' => '32%'
-        ],
-        [
-            'id' => 9,
-            'name' => 'Proyektor Epson EB-X51 XGA 3LCD 3800 Lumens',
-            'price' => 'Rp5.900.000',
-            'price_max' => '',
-            'stock' => 18,
-            'status' => 'Aktif',
-            'sales' => 34,
-            'views' => 1560,
-            'variants' => 1,
-            'warehouse' => 'Gudang A',
-            'sku' => 'PRJ-EPS-009',
-            'date' => '06/07/2026',
-            'image' => 'assets/infokus.png',
-            'rating' => 4.9,
-            'discount' => ''
-        ],
-        [
-            'id' => 10,
-            'name' => 'Komputer PC Rakitan Intel Core i5 RAM 8GB',
-            'price' => 'Rp4.350.000',
-            'price_max' => '',
-            'stock' => 0,
-            'status' => 'Habis',
-            'sales' => 67,
-            'views' => 2100,
-            'variants' => 1,
-            'warehouse' => 'Gudang D',
-            'sku' => 'UPS-APC-010',
-            'date' => '02/07/2026',
-            'image' => 'assets/pc.png',
-            'rating' => 4.5,
-            'discount' => ''
-        ],
-    ];
-}
+use App\Models\Product;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return view('login');
 });
+
+Route::get('/seller', [ProductController::class, 'index']);
+Route::get('/product/form', [ProductController::class, 'form']);
+Route::post('/product/store', [ProductController::class, 'store']);
 
 Route::get('/register', function () {
     return view('register');
@@ -231,6 +63,11 @@ Route::get('/dashboard', function () {
             'icon' => 'assets/pc.png',
             'bg' => 'rgba(0, 176, 80, 0.08)'
         ],
+    ];
+
+    $products = Product::all();
+    return view('home', ['role' => $role, 'categories' => $categories, 'products' => $products]);
+});
         [
             'name' => 'Furniture',
             'count' => '37 Unit',
@@ -239,7 +76,7 @@ Route::get('/dashboard', function () {
         ],
     ];
 
-    $products = getDummyProducts();
+    $products = Product::all();
 
     $features = [
         [
@@ -312,7 +149,7 @@ Route::get('/seller', function () {
         'pengunjung' => 1250,
     ];
 
-    $products = getDummyProducts();
+    $products = Product::all();
 
     return view('seller', compact('role', 'stats', 'products'));
 });
@@ -336,7 +173,7 @@ Route::get('/product/form', function () {
 Route::get('/product/detail', function () {
     $role = request()->query('role', 'member');
     $id = request()->query('id', 1);
-    $products = getDummyProducts();
+    $products = Product::all();
     $product = collect($products)->firstWhere('id', (int)$id) ?? $products[0];
     
     return view('product_detail', compact('product', 'role'));

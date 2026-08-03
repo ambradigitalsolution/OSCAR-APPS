@@ -391,17 +391,18 @@
                 </thead>
                 <tbody>
                     @foreach($products as $product)
-                    <tr class="product-row" data-status="{{ strtolower($product['status'] ?? '') }}" data-search="{{ strtolower($product['name'] . ' ' . ($product['sku'] ?? '')) }}">
+                    <tr class="product-row" data-status="{{ strtolower($product->status ?? '') }}" data-search="{{ strtolower($product->name . ' ' . ($product->etalase ?? '')) }}">
                         <td><input type="checkbox" class="cb"></td>
                         <td>
                             <div class="p-cell">
-                                <img src="{{ $product['image'] ?? 'https://placehold.co/150' }}" class="p-img" alt="{{ $product['name'] }}" style="object-fit:cover;">
+                                @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
+                                <img src="{{ asset($img) }}" class="p-img" alt="{{ $product->name }}" style="object-fit:cover;">
                                 <div class="p-detail">
-                                    <div class="p-name">{{ $product['name'] }}</div>
+                                    <div class="p-name">{{ $product->name }}</div>
                                     <div class="p-meta">
-                                        <span>{{ $product['variants'] }} produk varian</span>
+                                        <span>{{ $product->category }}</span>
                                         <span>&middot;</span>
-                                        <span>{{ $product['warehouse'] }}</span>
+                                        <span>{{ $product->etalase }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -410,28 +411,28 @@
                             <div class="td-stack">
                                 <div class="td-val">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;color:var(--tk-text-third);margin-right:2px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    {{ number_format($product['views']) }}
+                                    {{ number_format($product->views) }}
                                 </div>
-                                <div class="td-sub">Penjualan: {{ number_format($product['sales']) }}</div>
+                                <div class="td-sub">Penjualan: {{ number_format($product->sales) }}</div>
                             </div>
                         </td>
                         <td>
-                            @if($product['status'] == 'Aktif')
+                            @if($product->status == 'Aktif')
                             <div class="status-dot s-aktif">Aktif</div>
                             @else
                             <div class="status-dot s-habis">Habis</div>
                             @endif
                         </td>
                         <td>
-                            <div class="td-val">{{ number_format($product['stock']) }}</div>
+                            <div class="td-val">{{ number_format($product->stock) }}</div>
                         </td>
                         <td>
-                            <div class="td-val">{{ $product['price'] }}{{ $product['price_max'] ? ' - ' . $product['price_max'] : '' }}</div>
+                            <div class="td-val">Rp{{ number_format($product->price, 0, ',', '.') }}</div>
                         </td>
                         <td>
                             <div class="act-cell">
                                 @if($role == 'owner')
-                                <a href="/product/form?role={{ $role }}" class="act-link">Ubah</a>
+                                <a href="/product/form?role={{ $role }}&id={{ $product->id }}" class="act-link">Ubah</a>
                                 @else
                                 <span style="font-size:12px;color:var(--tk-text-third);">Lihat</span>
                                 @endif
@@ -455,41 +456,42 @@
             <!-- Mobile Cards (shown on <=768px, replaces table) -->
             <div class="mobile-cards">
                 @foreach($products as $product)
-                <div class="m-card product-row" data-status="{{ strtolower($product['status'] ?? '') }}" data-search="{{ strtolower($product['name'] . ' ' . ($product['sku'] ?? '')) }}">
+                @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
+                <div class="m-card product-row" data-status="{{ strtolower($product->status ?? '') }}" data-search="{{ strtolower($product->name . ' ' . ($product->etalase ?? '')) }}">
                     <div class="m-card-top">
-                        <img src="{{ $product['image'] ?? 'https://placehold.co/150' }}" class="m-card-img" alt="{{ $product['name'] }}" style="object-fit:cover;">
+                        <img src="{{ asset($img) }}" class="m-card-img" alt="{{ $product->name }}" style="object-fit:cover;">
                         <div class="m-card-info">
-                            <div class="m-card-name">{{ $product['name'] }}</div>
-                            <div class="m-card-sku">{{ $product['warehouse'] }}</div>
+                            <div class="m-card-name">{{ $product->name }}</div>
+                            <div class="m-card-sku">{{ $product->etalase }}</div>
                         </div>
                     </div>
                     <div class="m-card-grid">
                         <div class="m-card-stat">
                             <div class="label">Harga</div>
-                            <div class="value">{{ $product['price'] }}</div>
+                            <div class="value">Rp{{ number_format($product->price, 0, ',', '.') }}</div>
                         </div>
                         <div class="m-card-stat">
                             <div class="label">Stok</div>
-                            <div class="value">{{ number_format($product['stock']) }}</div>
+                            <div class="value">{{ number_format($product->stock) }}</div>
                         </div>
                         <div class="m-card-stat">
                             <div class="label">Tayangan</div>
-                            <div class="value">{{ number_format($product['views']) }}</div>
+                            <div class="value">{{ number_format($product->views) }}</div>
                         </div>
                         <div class="m-card-stat">
                             <div class="label">Penjualan</div>
-                            <div class="value">{{ number_format($product['sales']) }}</div>
+                            <div class="value">{{ number_format($product->sales) }}</div>
                         </div>
                     </div>
                     <div class="m-card-footer">
-                        @if($product['status'] == 'Aktif')
+                        @if($product->status == 'Aktif')
                         <div class="m-card-status s-aktif">Aktif</div>
                         @else
                         <div class="m-card-status s-habis">Habis</div>
                         @endif
                         <div class="act-cell">
                             @if($role == 'owner')
-                            <a href="/product/form?role={{ $role }}" class="act-link" style="font-size:13px;">Ubah</a>
+                            <a href="/product/form?role={{ $role }}&id={{ $product->id }}" class="act-link" style="font-size:13px;">Ubah</a>
                             @else
                             <span style="font-size:12px;color:var(--tk-text-third);">Lihat</span>
                             @endif
@@ -601,131 +603,7 @@
             });
         });
 
-        // Tampilkan produk yang baru ditambahkan dari localStorage
-        let addedProducts = JSON.parse(localStorage.getItem('addedProducts') || '[]');
-        if (addedProducts.length > 0) {
-            const tbody = document.querySelector('tbody');
-            const mobileCards = document.querySelector('.mobile-cards');
-            
-            [...addedProducts].reverse().forEach(prod => {
-                // Insert Desktop Row
-                if (tbody) {
-                    const rowHTML = `
-                    <tr class="product-row" data-status="aktif" data-search="${prod.name.toLowerCase()}">
-                        <td><input type="checkbox" class="cb"></td>
-                        <td>
-                            <div class="p-cell">
-                                <img src="${prod.image}" class="p-img" alt="${prod.name}" style="object-fit:cover;">
-                                <div class="p-detail">
-                                    <div class="p-name">${prod.name}</div>
-                                    <div class="p-meta">
-                                        <span>1 produk varian</span>
-                                        <span>&middot;</span>
-                                        <span>Gudang A</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="td-stack">
-                                <div class="td-val">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;color:var(--tk-text-third);margin-right:2px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    0
-                                </div>
-                                <div class="td-sub">Penjualan: 0</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="status-dot s-aktif">Aktif</div>
-                        </td>
-                        <td>
-                            <div class="td-val">100</div>
-                        </td>
-                        <td>
-                            <div class="td-val">Rp 0</div>
-                        </td>
-                        <td>
-                            <div class="act-cell">
-                                @if($role == 'owner')
-                                <a href="/product/form?role={{ $role }}" class="act-link">Ubah</a>
-                                @else
-                                <span style="font-size:12px;color:var(--tk-text-third);">Lihat</span>
-                                @endif
-                                @if($role == 'owner')
-                                <div class="act-more" title="Lainnya" onclick="toggleDropdown(this)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                                </div>
-                                <div class="dropdown-menu">
-                                    <div class="dropdown-item" onclick="changeStatus(this, 'Aktif')">Aktifkan</div>
-                                    <div class="dropdown-item" onclick="changeStatus(this, 'Nonaktif')">Nonaktifkan</div>
-                                    <div class="dropdown-item" style="color: #ef4444;" onclick="deleteItem(this)">Hapus</div>
-                                </div>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>`;
-                    tbody.insertAdjacentHTML('afterbegin', rowHTML);
-                }
-
-                // Insert Mobile Card
-                if (mobileCards) {
-                    const cardHTML = `
-                    <div class="m-card product-row" data-status="aktif" data-search="${prod.name.toLowerCase()}">
-                        <div class="m-card-top">
-                            <img src="${prod.image}" class="m-card-img" alt="${prod.name}" style="object-fit:cover;">
-                            <div class="m-card-info">
-                                <div class="m-card-name">${prod.name}</div>
-                                <div class="m-card-sku">Gudang A</div>
-                            </div>
-                        </div>
-                        <div class="m-card-grid">
-                            <div class="m-card-stat">
-                                <div class="label">Harga</div>
-                                <div class="value">Rp 0</div>
-                            </div>
-                            <div class="m-card-stat">
-                                <div class="label">Stok</div>
-                                <div class="value">100</div>
-                            </div>
-                            <div class="m-card-stat">
-                                <div class="label">Tayangan</div>
-                                <div class="value">0</div>
-                            </div>
-                            <div class="m-card-stat">
-                                <div class="label">Penjualan</div>
-                                <div class="value">0</div>
-                            </div>
-                        </div>
-                        <div class="m-card-footer">
-                            <div class="m-card-status s-aktif">Aktif</div>
-                            <div class="act-cell">
-                                @if($role == 'owner')
-                                <a href="/product/form?role={{ $role }}" class="act-link" style="font-size:13px;">Ubah</a>
-                                @else
-                                <span style="font-size:12px;color:var(--tk-text-third);">Lihat</span>
-                                @endif
-                                @if($role == 'owner')
-                                <div class="act-more" title="Lainnya" onclick="toggleDropdown(this)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                                </div>
-                                <div class="dropdown-menu" style="bottom: 100%; top: auto; margin-bottom: 4px;">
-                                    <div class="dropdown-item" onclick="changeStatus(this, 'Aktif')">Aktifkan</div>
-                                    <div class="dropdown-item" onclick="changeStatus(this, 'Nonaktif')">Nonaktifkan</div>
-                                    <div class="dropdown-item" style="color: #ef4444;" onclick="deleteItem(this)">Hapus</div>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>`;
-                    mobileCards.insertAdjacentHTML('afterbegin', cardHTML);
-                }
-            });
-            // Update total item text
-            const totalText = document.querySelector('.tbl-footer-left strong');
-            if (totalText) {
-                totalText.textContent = parseInt(totalText.textContent) + addedProducts.length;
-            }
-        }
+        // LocalStorage fallback for new items has been removed since we use actual Database now.
     });
 </script>
 </body>

@@ -520,21 +520,21 @@
         
                 <div class="expandable-grid product-grid">
             @foreach(collect($products)->take(12) as $product)
-            <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product['id'] ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+            <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
                 <div style="position: relative; aspect-ratio: 1/1; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
                     <!-- New Tag -->
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
 
-
-                    <img src="{{ asset($product['image']) }}" alt="Product" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
+                    <img src="{{ asset($img) }}" alt="Product" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </div>
                 
                 <!-- Content Area -->
                 <div style="padding: 12px; display: flex; flex-direction: column; flex-grow: 1;">
                     <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
-                        {{ $product['name'] }}
+                        {{ $product->name }}
                     </h3>
                     
                     <!-- Call to action -->
@@ -566,19 +566,19 @@
         
                         <div class="expandable-grid product-grid">
             @foreach(collect($products)->take(36) as $product)
-            <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product['id'] ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+            <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
                 <div style="position: relative; aspect-ratio: 1/1; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
 
-
-                    <img src="{{ asset($product['image']) }}" alt="Product" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
+                    <img src="{{ asset($img) }}" alt="Product" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </div>
                 
                 <!-- Content Area -->
                 <div style="padding: 12px; display: flex; flex-direction: column; flex-grow: 1;">
                     <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
-                        {{ $product['name'] }}
+                        {{ $product->name }}
                     </h3>
                     
                     <!-- Call to action -->

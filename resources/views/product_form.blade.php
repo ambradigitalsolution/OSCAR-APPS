@@ -672,19 +672,22 @@
 
                     <div class="form-group">
                         <label class="form-label">Nama Produk <span class="req">*</span></label>
-                        <input type="text" id="productNameInput" class="form-input" placeholder="Contoh: Sepatu Sneakers Pria Hitam 42" value="">
+                        <input type="text" id="productNameInput" class="form-input" placeholder="Contoh: Sepatu Sneakers Pria Hitam 42" value="{{ $product->name ?? '' }}">
                         <div class="form-hint">Nama produk min. 5 karakter, maks. 70 karakter. Disarankan mengandung merek, tipe, dan warna.</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Kategori <span class="req">*</span></label>
                         <select class="form-select" id="productCategoryInput" onchange="toggleNewCategoryInput(this)">
-                            <option selected disabled hidden value="">Pilih Kategori</option>
-                            <option value="Rumah Tangga">Rumah Tangga</option>
-                            <option value="Elektronik">Elektronik</option>
-                            <option value="Pakaian">Pakaian</option>
-                            <option value="Kesehatan">Kesehatan</option>
-                            <option value="Hobi & Koleksi">Hobi & Koleksi</option>
+                            <option {{ !isset($product) ? 'selected' : '' }} disabled hidden value="">Pilih Kategori</option>
+                            <option value="Rumah Tangga" {{ (isset($product) && $product->category == 'Rumah Tangga') ? 'selected' : '' }}>Rumah Tangga</option>
+                            <option value="Elektronik" {{ (isset($product) && $product->category == 'Elektronik') ? 'selected' : '' }}>Elektronik</option>
+                            <option value="Pakaian" {{ (isset($product) && $product->category == 'Pakaian') ? 'selected' : '' }}>Pakaian</option>
+                            <option value="Kesehatan" {{ (isset($product) && $product->category == 'Kesehatan') ? 'selected' : '' }}>Kesehatan</option>
+                            <option value="Hobi & Koleksi" {{ (isset($product) && $product->category == 'Hobi & Koleksi') ? 'selected' : '' }}>Hobi & Koleksi</option>
+                            @if(isset($product) && !in_array($product->category, ['Rumah Tangga', 'Elektronik', 'Pakaian', 'Kesehatan', 'Hobi & Koleksi']))
+                                <option value="{{ $product->category }}" selected>{{ $product->category }}</option>
+                            @endif
                             <option value="new" style="font-weight: bold; color: var(--tk-green);">+ Tambah Kategori Baru</option>
                         </select>
                         <input type="text" id="newCategoryInput" class="form-input" placeholder="Ketik nama kategori baru..." style="display: none; margin-top: 10px;">
@@ -693,7 +696,10 @@
                     <div class="form-group">
                         <label class="form-label">Etalase</label>
                         <select class="form-select" id="productEtalaseInput" onchange="toggleNewEtalaseInput(this)">
-                            <option selected disabled hidden value="">Pilih Etalase</option>
+                            <option {{ !isset($product) || !$product->etalase ? 'selected' : '' }} disabled hidden value="">Pilih Etalase</option>
+                            @if(isset($product) && $product->etalase)
+                                <option value="{{ $product->etalase }}" selected>{{ $product->etalase }}</option>
+                            @endif
                             <option value="new" style="font-weight: bold; color: var(--tk-green);">+ Tambah Etalase Baru</option>
                         </select>
                         <input type="text" id="newEtalaseInput" class="form-input" placeholder="Ketik nama etalase baru..." style="display: none; margin-top: 10px;">
@@ -711,10 +717,10 @@
                         <label class="form-label">Kondisi <span class="req">*</span></label>
                         <div style="display:flex;gap:24px;margin-top:10px;">
                             <label class="cb-label">
-                                <input type="radio" name="kondisi" class="cb" checked> Baru
+                                <input type="radio" name="kondisi" value="Baru" class="cb" {{ (!isset($product) || $product->kondisi == 'Baru') ? 'checked' : '' }}> Baru
                             </label>
                             <label class="cb-label">
-                                <input type="radio" name="kondisi" class="cb"> Bekas
+                                <input type="radio" name="kondisi" value="Bekas" class="cb" {{ (isset($product) && $product->kondisi == 'Bekas') ? 'checked' : '' }}> Bekas
                             </label>
                         </div>
                     </div>
@@ -732,12 +738,17 @@
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                             </button>
                         </div>
-                        <div class="rt-area" contenteditable="true"></div>
+                        <div class="rt-area" contenteditable="true">{!! $product->description ?? '' !!}</div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 24px; max-width: 300px;">
+                        <label class="form-label">Harga <span class="req">*</span></label>
+                        <input type="number" id="productPriceInput" class="form-input" placeholder="0" value="{{ $product->price ?? '' }}">
                     </div>
 
                     <div class="form-group" style="margin-top: 24px; max-width: 300px;">
                         <label class="form-label">Stok <span class="req">*</span></label>
-                        <input type="number" id="productStockInput" class="form-input" placeholder="0">
+                        <input type="number" id="productStockInput" class="form-input" placeholder="0" value="{{ $product->stock ?? '' }}">
                     </div>
 
                 </div>
@@ -1175,39 +1186,53 @@
                 const formattedPrice = "Rp " + new Intl.NumberFormat('id-ID').format(productPriceRaw || 0);
 
                 const newProduct = {
-                    id: Date.now(),
+                    _token: '{{ csrf_token() }}',
+                    id: '{{ $product->id ?? '' }}',
                     name: productName,
-                    image: prodImage,
                     images: allImages,
-                    desc: productDesc,
-                    price: formattedPrice,
+                    description: productDesc,
+                    price: productPriceRaw,
                     stock: parseInt(productStockRaw) || 0,
-                    priceRaw: productPriceRaw,
                     category: finalCategory,
-                    etalase: finalEtalase
+                    etalase: finalEtalase,
+                    kondisi: document.querySelector('input[name="kondisi"]:checked') ? document.querySelector('input[name="kondisi"]:checked').value : 'Baru'
                 };
                 
-                let addedProducts = JSON.parse(localStorage.getItem('addedProducts') || '[]');
-                addedProducts.unshift(newProduct);
-                localStorage.setItem('addedProducts', JSON.stringify(addedProducts));
-
-                // Tampilkan toast notifikasi berhasil
-                document.getElementById('toastTitle').textContent = 'Berhasil!';
-                document.getElementById('toastDetail').textContent = 'Produk baru telah berhasil disimpan.';
-                
-                const toast = document.getElementById('compressToast');
-                toast.classList.add('show');
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => {
-                        if (isNew) {
-                            window.location.reload();
-                        } else {
-                            window.location.href = '/seller?role={{ request('role') ?? "owner" }}';
-                        }
-                    }, 300);
-                }, 2000);
+                fetch('/product/store?role={{ request('role') ?? "owner" }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newProduct)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        // Tampilkan toast notifikasi berhasil
+                        document.getElementById('toastTitle').textContent = 'Berhasil!';
+                        document.getElementById('toastDetail').textContent = data.message;
+                        
+                        const toast = document.getElementById('compressToast');
+                        toast.classList.add('show');
+                        
+                        setTimeout(() => {
+                            toast.classList.remove('show');
+                            setTimeout(() => {
+                                if (isNew) {
+                                    window.location.href = '/product/form?role={{ request('role') ?? "owner" }}';
+                                } else {
+                                    window.location.href = '/seller?role={{ request('role') ?? "owner" }}';
+                                }
+                            }, 300);
+                        }, 2000);
+                    } else {
+                        alert('Error: ' + JSON.stringify(data));
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Gagal menyimpan produk');
+                });
             };
         });
 

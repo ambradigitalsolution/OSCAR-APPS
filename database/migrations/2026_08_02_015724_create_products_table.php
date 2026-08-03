@@ -14,19 +14,16 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('price');
-            $table->string('price_max')->nullable();
+            $table->string('category')->nullable();
+            $table->string('etalase')->nullable();
+            $table->string('kondisi')->default('Baru');
+            $table->longText('description')->nullable();
+            $table->integer('price')->default(0);
             $table->integer('stock')->default(0);
             $table->string('status')->default('Aktif');
             $table->integer('sales')->default(0);
             $table->integer('views')->default(0);
-            $table->integer('variants')->default(1);
-            $table->string('warehouse')->nullable();
-            $table->string('sku')->nullable();
-            $table->string('date')->nullable();
-            $table->string('image')->nullable();
-            $table->decimal('rating', 3, 1)->nullable();
-            $table->string('discount')->nullable();
+            $table->json('images')->nullable();
             $table->timestamps();
         });
     }
