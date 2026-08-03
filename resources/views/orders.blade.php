@@ -201,9 +201,9 @@
             .tbl-tabs{padding:0 12px;gap:0;}
             .tbl-tab{padding:10px 10px;font-size:12px;}
 
-            .tbl-filters{padding:10px 12px;gap:6px;}
-            .f-input{width:100%;flex:1;}
-            .f-select{flex:1;min-width:0;}
+            .tbl-filters{padding:10px 12px;gap:8px;flex-direction:column;align-items:stretch;}
+            .f-input{width:100%;flex:unset;}
+            .f-select{width:100%;flex:unset;min-width:0;}
             .f-spacer{display:none;}
 
             .tbl-footer{flex-direction:column;gap:10px;align-items:stretch;text-align:center;}
