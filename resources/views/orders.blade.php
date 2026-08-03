@@ -192,7 +192,7 @@
             .header-divider{display:none;}
             .user-name{display:none;}
 
-            .main{padding:16px;}
+            .main{padding:16px 16px 80px 16px;}
             .stat-grid{grid-template-columns:1fr 1fr;}
 
             .tbl-box table,.tbl-box thead,.tbl-box tbody{display:none;}
