@@ -281,7 +281,6 @@
                                         ERP Dashboard <br><span style="color: #4f46e5;">Versi 2.0</span>
                                     </h2>
                                     <p class="banner-subtitle">Pembaruan sistem manajemen inventaris terpadu untuk efisiensi operasional.</p>
-                                    <span class="btn btn-primary" style="background-color: #0f172a; border-color: #0f172a; padding: 10px 24px; font-size: 15px; border-radius: 10px;">Lihat Laporan</span>
                                 </div>
                                 <img src="{{ asset('assets/server.png') }}" alt="ERP System" class="banner-image">
                             </div>
