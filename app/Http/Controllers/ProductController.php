@@ -12,7 +12,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $role = strtolower($request->query('role', 'member'));
-        $products = Product::all();
+        $products = Product::orderBy('created_at', 'desc')->get();
         
         // This is usually for Seller Center
         return view('seller', compact('products', 'role'));

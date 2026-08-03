@@ -67,7 +67,7 @@ Route::get('/dashboard', function () {
         ],
     ];
 
-    $products = Product::all();
+    $products = Product::orderBy('created_at', 'desc')->get();
 
     $features = [
         [
@@ -140,7 +140,7 @@ Route::get('/seller', function () {
         'pengunjung' => 1250,
     ];
 
-    $products = Product::all();
+    $products = Product::orderBy('created_at', 'desc')->get();
 
     return view('seller', compact('role', 'stats', 'products'));
 });
@@ -164,7 +164,7 @@ Route::get('/product/form', function () {
 Route::get('/product/detail', function () {
     $role = request()->query('role', 'member');
     $id = request()->query('id', 1);
-    $products = Product::all();
+    $products = Product::orderBy('created_at', 'desc')->get();
     $product = collect($products)->firstWhere('id', (int)$id) ?? $products[0];
     
     return view('product_detail', compact('product', 'role'));

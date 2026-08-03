@@ -867,7 +867,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                     </svg>
                     <span class="photo-label">${isMain ? 'Foto Utama' : 'Foto ' + (index + 1)}</span>
-                    <input type="file" accept=".jpg,.jpeg,.png,.webp" id="photoInput${index}">
+                    <input type="file" accept="image/*" capture="environment" id="photoInput${index}">
                     <div class="compress-overlay">
                         <div class="compress-spinner"></div>
                         <span class="compress-text">Compressing...</span>
@@ -1134,7 +1134,26 @@
                 }
             });
 
+            let isSaving = false;
             window.handleSave = function(isNew) {
+                if (isSaving) return;
+
+                const btnSave = document.querySelector('.header-right .btn-white');
+                const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
+                
+                if (isNew && btnSaveNew) {
+                    btnSaveNew.innerHTML = 'Menyimpan...';
+                    btnSaveNew.style.opacity = '0.7';
+                    btnSaveNew.style.pointerEvents = 'none';
+                }
+                if (!isNew && btnSave) {
+                    btnSave.innerHTML = 'Menyimpan...';
+                    btnSave.style.opacity = '0.7';
+                    btnSave.style.pointerEvents = 'none';
+                }
+                
+                isSaving = true;
+
                 // Simpan produk ke localStorage
                 const productName = document.getElementById('productNameInput').value;
                 const productDesc = document.querySelector('.rt-area').innerHTML;
@@ -1227,11 +1246,21 @@
                         }, 2000);
                     } else {
                         alert('Error: ' + JSON.stringify(data));
+                        isSaving = false;
+                        const btnSave = document.querySelector('.header-right .btn-white');
+                        const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
+                        if (isNew && btnSaveNew) { btnSaveNew.innerHTML = 'Simpan & Tambah Baru'; btnSaveNew.style.opacity = '1'; btnSaveNew.style.pointerEvents = 'auto'; }
+                        if (!isNew && btnSave) { btnSave.innerHTML = 'Simpan'; btnSave.style.opacity = '1'; btnSave.style.pointerEvents = 'auto'; }
                     }
                 })
                 .catch(err => {
                     console.error(err);
                     alert('Gagal menyimpan produk');
+                    isSaving = false;
+                    const btnSave = document.querySelector('.header-right .btn-white');
+                    const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
+                    if (isNew && btnSaveNew) { btnSaveNew.innerHTML = 'Simpan & Tambah Baru'; btnSaveNew.style.opacity = '1'; btnSaveNew.style.pointerEvents = 'auto'; }
+                    if (!isNew && btnSave) { btnSave.innerHTML = 'Simpan'; btnSave.style.opacity = '1'; btnSave.style.pointerEvents = 'auto'; }
                 });
             };
         });
