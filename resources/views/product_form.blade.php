@@ -621,6 +621,7 @@
             .btn-outline-white { display: none; } /* Hide secondary button on mobile to save space */
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -1227,25 +1228,27 @@
                 .then(res => res.json())
                 .then(data => {
                     if(data.success) {
-                        // Tampilkan toast notifikasi berhasil
-                        document.getElementById('toastTitle').textContent = 'Berhasil!';
-                        document.getElementById('toastDetail').textContent = data.message;
-                        
-                        const toast = document.getElementById('compressToast');
-                        toast.classList.add('show');
-                        
-                        setTimeout(() => {
-                            toast.classList.remove('show');
-                            setTimeout(() => {
-                                if (isNew) {
-                                    window.location.href = '/product/form?role={{ request('role') ?? "owner" }}';
-                                } else {
-                                    window.location.href = '/seller?role={{ request('role') ?? "owner" }}';
-                                }
-                            }, 300);
-                        }, 2000);
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonColor: '#00AA5B',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            if (isNew) {
+                                window.location.href = '/product/form?role={{ request('role') ?? "owner" }}';
+                            } else {
+                                window.location.href = '/seller?role={{ request('role') ?? "owner" }}';
+                            }
+                        });
                     } else {
-                        alert('Error: ' + JSON.stringify(data));
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: data.error || data.message || 'Terjadi kesalahan saat menyimpan produk.',
+                            icon: 'error',
+                            confirmButtonColor: '#EF144A'
+                        });
                         isSaving = false;
                         const btnSave = document.querySelector('.header-right .btn-white');
                         const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
@@ -1255,7 +1258,12 @@
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Gagal menyimpan produk');
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan jaringan atau server saat menyimpan produk.',
+                        icon: 'error',
+                        confirmButtonColor: '#EF144A'
+                    });
                     isSaving = false;
                     const btnSave = document.querySelector('.header-right .btn-white');
                     const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
