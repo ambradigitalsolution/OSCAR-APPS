@@ -752,11 +752,11 @@
 
     function addToCart() {
         const qty = parseInt(document.getElementById('qtyInput').value) || 1;
-        const productId = window.overrideProductId || {{ $product['id'] ?? 1 }};
-        const productName = window.overrideProductName || "{{ $product['name'] ?? '' }}";
+        const productId = {{ $product['id'] ?? 1 }};
+        const productName = {!! json_encode($product['name'] ?? '') !!};
         const productPrice = pricePerItem;
-        const productImage = window.overrideProductImage || "{{ asset($product['image'] ?? 'assets/hp.png') }}";
-        const productStore = "{{ $product['warehouse'] ?? 'App Oscar Official Store' }}";
+        const productImage = document.getElementById('mainImage') ? document.getElementById('mainImage').src : "{{ asset($product['image'] ?? 'assets/hp.png') }}";
+        const productStore = {!! json_encode($product['warehouse'] ?? 'App Oscar Official Store') !!};
         
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         
@@ -800,7 +800,7 @@
 
     function contactAdmin() {
         const qty = document.getElementById('qtyInput').value || 1;
-        const productName = window.overrideProductName || "{{ $product['name'] ?? 'Produk App Oscar' }}";
+        const productName = {!! json_encode($product['name'] ?? 'Produk App Oscar') !!};
         const waNumber = "6285800436222";
         const text = `Halo Admin App Oscar, saya ingin bertanya tentang produk *${productName}* (Jumlah: ${qty}).`;
         window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
@@ -828,53 +828,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const params = new URLSearchParams(window.location.search);
-        const productId = params.get('id');
-        if (productId) {
-            let addedProducts = JSON.parse(localStorage.getItem('addedProducts') || '[]');
-            const found = addedProducts.find(p => p.id == productId);
-            if (found) {
-                // Update UI elements
-                document.getElementById('mainImage').src = found.image;
-                const titleEl = document.querySelector('.product-title');
-                if (titleEl) titleEl.textContent = found.name;
-                
-                const breadcrumbSpan = document.querySelector('.breadcrumb span');
-                if (breadcrumbSpan) breadcrumbSpan.textContent = found.name;
-
-                // Update Thumbnail Gallery
-                const thumbList = document.getElementById('thumbnailList');
-                if (thumbList) {
-                    const imagesToDisplay = (found.images && found.images.length > 0) ? found.images : [found.image];
-                    let thumbHtml = '';
-                    imagesToDisplay.forEach((imgSrc, index) => {
-                        thumbHtml += `
-                        <div class="thumbnail-item ${index === 0 ? 'active' : ''}" onclick="changeImage(this, '${imgSrc}')">
-                            <img src="${imgSrc}" alt="Thumb ${index + 1}">
-                        </div>`;
-                    });
-                    thumbList.innerHTML = thumbHtml;
-                }
-
-                const detailPrice = document.getElementById('detailPrice');
-                if (detailPrice && found.price) detailPrice.textContent = found.price;
-
-                const detailStock = document.getElementById('detailStock');
-                if (detailStock && found.stock !== undefined) detailStock.textContent = found.stock;
-                
-                // Update quantity max
-                const qtyInput = document.getElementById('qtyInput');
-                if (qtyInput && found.stock !== undefined) qtyInput.max = found.stock;
-
-                const descEl = document.querySelector('.desc-content');
-                if (descEl && found.desc) descEl.innerHTML = found.desc;
-                
-                // Override global variables for functions
-                window.overrideProductId = found.id;
-                window.overrideProductName = found.name;
-                window.overrideProductImage = found.image;
-            }
-        }
+        // Init any needed scripts here, local storage override removed
     });
 </script>
 @endsection
