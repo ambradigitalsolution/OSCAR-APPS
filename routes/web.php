@@ -15,6 +15,16 @@ Route::post('/product/store', [ProductController::class, 'store']);
 Route::post('/product/toggle-status/{id}', [ProductController::class, 'toggleStatus']);
 Route::delete('/product/delete/{id}', [ProductController::class, 'destroy']);
 
+// Route khusus untuk menjalankan migration di cPanel tanpa terminal
+Route::get('/run-migrations', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return "Berhasil menjalankan migration: <br><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+    } catch (\Exception $e) {
+        return "Gagal: " . $e->getMessage();
+    }
+});
+
 // API Routes for Category & Etalase in Product Form
 Route::post('/product/category/store', [ProductController::class, 'storeCategory']);
 Route::delete('/product/category/delete', [ProductController::class, 'deleteCategory']);
