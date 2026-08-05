@@ -526,9 +526,7 @@
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
 
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <div style="position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="{{ asset($img) }}" alt="Product" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;">
-                    </div>
+                    <img src="{{ asset($img) }}" alt="Product" style="position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-fit: contain; object-position: center;">
                 </div>
                 
                 <!-- Content Area -->
@@ -571,9 +569,7 @@
                 <!-- Image Area -->
                 <div style="position: relative; width: 100%; padding-bottom: 100%; background-color: #f8fafc; overflow: hidden;">
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <div style="position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="{{ asset($img) }}" alt="Product" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;">
-                    </div>
+                    <img src="{{ asset($img) }}" alt="Product" style="position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-fit: contain; object-position: center;">
                 </div>
                 
                 <!-- Content Area -->
