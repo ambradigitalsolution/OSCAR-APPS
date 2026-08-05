@@ -526,7 +526,7 @@
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
 
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <img src="{{ asset($img) }}" alt="Product" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    <img src="{{ asset($img) }}" alt="Product" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 
                 <!-- Content Area -->
@@ -570,7 +570,7 @@
                 <div style="position: relative; aspect-ratio: 1/1; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
 
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <img src="{{ asset($img) }}" alt="Product" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    <img src="{{ asset($img) }}" alt="Product" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 
                 <!-- Content Area -->
