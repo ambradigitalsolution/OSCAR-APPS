@@ -297,7 +297,6 @@
                                         Kontrol Penuh <br><span style="color: #16a34a;">Semua Gudang</span>
                                     </h2>
                                     <p class="banner-subtitle">Pantau ketersediaan stok barang dan status pengiriman secara real-time.</p>
-                                    <span class="btn btn-primary" style="background-color: #16a34a; border-color: #16a34a; padding: 10px 24px; font-size: 15px; border-radius: 10px;">Cek Gudang</span>
                                 </div>
                                 <img src="{{ asset('assets/pc.png') }}" alt="Manajemen Gudang" class="banner-image">
                             </div>
