@@ -681,17 +681,10 @@
                         <label class="form-label">Kategori <span class="req">*</span></label>
                         <select class="form-select" id="productCategoryInput" onchange="toggleNewCategoryInput(this)">
                             <option {{ !isset($product) ? 'selected' : '' }} disabled hidden value="">Pilih Kategori</option>
-                            <option value="Rumah Tangga" {{ (isset($product) && $product->category == 'Rumah Tangga') ? 'selected' : '' }}>Rumah Tangga</option>
-                            <option value="Elektronik" {{ (isset($product) && $product->category == 'Elektronik') ? 'selected' : '' }}>Elektronik</option>
-                            <option value="Pakaian" {{ (isset($product) && $product->category == 'Pakaian') ? 'selected' : '' }}>Pakaian</option>
-                            <option value="Kesehatan" {{ (isset($product) && $product->category == 'Kesehatan') ? 'selected' : '' }}>Kesehatan</option>
-                            <option value="Hobi & Koleksi" {{ (isset($product) && $product->category == 'Hobi & Koleksi') ? 'selected' : '' }}>Hobi & Koleksi</option>
                             @foreach($categories as $cat)
-                                @if(!in_array($cat->name, ['Rumah Tangga', 'Elektronik', 'Pakaian', 'Kesehatan', 'Hobi & Koleksi']))
-                                    <option value="{{ $cat->name }}" data-custom="1" {{ (isset($product) && $product->category == $cat->name) ? 'selected' : '' }}>{{ $cat->name }}</option>
-                                @endif
+                                <option value="{{ $cat->name }}" data-custom="1" {{ (isset($product) && $product->category == $cat->name) ? 'selected' : '' }}>{{ $cat->name }}</option>
                             @endforeach
-                            @if(isset($product) && !in_array($product->category, ['Rumah Tangga', 'Elektronik', 'Pakaian', 'Kesehatan', 'Hobi & Koleksi']) && !$categories->contains('name', $product->category))
+                            @if(isset($product) && $product->category && !$categories->contains('name', $product->category))
                                 <option value="{{ $product->category }}" data-custom="1" selected>{{ $product->category }}</option>
                             @endif
                             <option value="new" style="font-weight: bold; color: var(--tk-green);">+ Tambah Kategori Baru</option>
