@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Etalase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -30,8 +32,11 @@ class ProductController extends Controller
         if ($id) {
             $product = Product::find($id);
         }
+        
+        $categories = Category::all();
+        $etalases = Etalase::all();
 
-        return view('product_form', compact('role', 'product'));
+        return view('product_form', compact('role', 'product', 'categories', 'etalases'));
     }
 
     public function store(Request $request)
@@ -130,5 +135,45 @@ class ProductController extends Controller
         }
 
         return response()->json(['error' => 'Produk tidak ditemukan'], 404);
+    }
+
+    public function storeCategory(Request $request)
+    {
+        $role = strtolower($request->query('role', 'member'));
+        if ($role !== 'owner') return response()->json(['error' => 'Unauthorized'], 403);
+
+        $request->validate(['name' => 'required|string|max:255']);
+        $category = Category::create(['name' => $request->name]);
+        return response()->json(['success' => true, 'category' => $category]);
+    }
+
+    public function deleteCategory(Request $request)
+    {
+        $role = strtolower($request->query('role', 'member'));
+        if ($role !== 'owner') return response()->json(['error' => 'Unauthorized'], 403);
+
+        $request->validate(['name' => 'required|string']);
+        Category::where('name', $request->name)->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function storeEtalase(Request $request)
+    {
+        $role = strtolower($request->query('role', 'member'));
+        if ($role !== 'owner') return response()->json(['error' => 'Unauthorized'], 403);
+
+        $request->validate(['name' => 'required|string|max:255']);
+        $etalase = Etalase::create(['name' => $request->name]);
+        return response()->json(['success' => true, 'etalase' => $etalase]);
+    }
+
+    public function deleteEtalase(Request $request)
+    {
+        $role = strtolower($request->query('role', 'member'));
+        if ($role !== 'owner') return response()->json(['error' => 'Unauthorized'], 403);
+
+        $request->validate(['name' => 'required|string']);
+        Etalase::where('name', $request->name)->delete();
+        return response()->json(['success' => true]);
     }
 }

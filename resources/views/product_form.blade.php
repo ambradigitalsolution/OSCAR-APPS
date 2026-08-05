@@ -686,8 +686,13 @@
                             <option value="Pakaian" {{ (isset($product) && $product->category == 'Pakaian') ? 'selected' : '' }}>Pakaian</option>
                             <option value="Kesehatan" {{ (isset($product) && $product->category == 'Kesehatan') ? 'selected' : '' }}>Kesehatan</option>
                             <option value="Hobi & Koleksi" {{ (isset($product) && $product->category == 'Hobi & Koleksi') ? 'selected' : '' }}>Hobi & Koleksi</option>
-                            @if(isset($product) && !in_array($product->category, ['Rumah Tangga', 'Elektronik', 'Pakaian', 'Kesehatan', 'Hobi & Koleksi']))
-                                <option value="{{ $product->category }}" selected>{{ $product->category }}</option>
+                            @foreach($categories as $cat)
+                                @if(!in_array($cat->name, ['Rumah Tangga', 'Elektronik', 'Pakaian', 'Kesehatan', 'Hobi & Koleksi']))
+                                    <option value="{{ $cat->name }}" data-custom="1" {{ (isset($product) && $product->category == $cat->name) ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                @endif
+                            @endforeach
+                            @if(isset($product) && !in_array($product->category, ['Rumah Tangga', 'Elektronik', 'Pakaian', 'Kesehatan', 'Hobi & Koleksi']) && !$categories->contains('name', $product->category))
+                                <option value="{{ $product->category }}" data-custom="1" selected>{{ $product->category }}</option>
                             @endif
                             <option value="new" style="font-weight: bold; color: var(--tk-green);">+ Tambah Kategori Baru</option>
                         </select>
@@ -699,8 +704,11 @@
                         <label class="form-label">Etalase</label>
                         <select class="form-select" id="productEtalaseInput" onchange="toggleNewEtalaseInput(this)">
                             <option {{ !isset($product) || !$product->etalase ? 'selected' : '' }} disabled hidden value="">Pilih Etalase</option>
-                            @if(isset($product) && $product->etalase)
-                                <option value="{{ $product->etalase }}" selected>{{ $product->etalase }}</option>
+                            @foreach($etalases as $eta)
+                                <option value="{{ $eta->name }}" data-custom="1" {{ (isset($product) && $product->etalase == $eta->name) ? 'selected' : '' }}>{{ $eta->name }}</option>
+                            @endforeach
+                            @if(isset($product) && $product->etalase && !$etalases->contains('name', $product->etalase))
+                                <option value="{{ $product->etalase }}" data-custom="1" selected>{{ $product->etalase }}</option>
                             @endif
                             <option value="new" style="font-weight: bold; color: var(--tk-green);">+ Tambah Etalase Baru</option>
                         </select>
@@ -777,37 +785,22 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // Load custom categories and etalase from local storage
-            const customCats = JSON.parse(localStorage.getItem('customCategories') || '[]');
             const catSelect = document.getElementById('productCategoryInput');
-            if (customCats.length > 0 && catSelect) {
-                const newOptionCat = catSelect.querySelector('option[value="new"]');
-                customCats.forEach(cat => {
-                    const opt = document.createElement('option');
-                    opt.value = cat;
-                    opt.textContent = cat;
-                    catSelect.insertBefore(opt, newOptionCat);
-                });
-            }
-            if (catSelect && customCats.includes(catSelect.value)) {
-                const delBtn = document.getElementById('deleteCategoryBtn');
-                if (delBtn) delBtn.style.display = 'inline-block';
+            if (catSelect) {
+                const opt = catSelect.options[catSelect.selectedIndex];
+                if (opt && opt.getAttribute('data-custom') === '1') {
+                    const delBtn = document.getElementById('deleteCategoryBtn');
+                    if (delBtn) delBtn.style.display = 'inline-block';
+                }
             }
 
-            const customEtas = JSON.parse(localStorage.getItem('customEtalases') || '[]');
             const etaSelect = document.getElementById('productEtalaseInput');
-            if (customEtas.length > 0 && etaSelect) {
-                const newOptionEta = etaSelect.querySelector('option[value="new"]');
-                customEtas.forEach(eta => {
-                    const opt = document.createElement('option');
-                    opt.value = eta;
-                    opt.textContent = eta;
-                    etaSelect.insertBefore(opt, newOptionEta);
-                });
-            }
-            if (etaSelect && customEtas.includes(etaSelect.value)) {
-                const delBtn = document.getElementById('deleteEtalaseBtn');
-                if (delBtn) delBtn.style.display = 'inline-block';
+            if (etaSelect) {
+                const opt = etaSelect.options[etaSelect.selectedIndex];
+                if (opt && opt.getAttribute('data-custom') === '1') {
+                    const delBtn = document.getElementById('deleteEtalaseBtn');
+                    if (delBtn) delBtn.style.display = 'inline-block';
+                }
             }
 
             // ========== TABLE OF CONTENTS SCROLL SPY ==========
@@ -1173,27 +1166,29 @@
                 
                 // Get Category
                 let finalCategory = document.getElementById('productCategoryInput').value;
+                let customCategorySaved = false;
                 if (finalCategory === 'new') {
                     finalCategory = document.getElementById('newCategoryInput').value;
                     if (finalCategory) {
-                        let customCats = JSON.parse(localStorage.getItem('customCategories') || '[]');
-                        if (!customCats.includes(finalCategory)) {
-                            customCats.push(finalCategory);
-                            localStorage.setItem('customCategories', JSON.stringify(customCats));
-                        }
+                        customCategorySaved = fetch('/product/category/store?role={{ request("role") ?? "owner" }}', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            body: JSON.stringify({ name: finalCategory })
+                        }).catch(e => console.error(e));
                     }
                 }
                 
                 // Get Etalase
                 let finalEtalase = document.getElementById('productEtalaseInput').value;
+                let customEtalaseSaved = false;
                 if (finalEtalase === 'new') {
                     finalEtalase = document.getElementById('newEtalaseInput').value;
                     if (finalEtalase) {
-                        let customEtas = JSON.parse(localStorage.getItem('customEtalases') || '[]');
-                        if (!customEtas.includes(finalEtalase)) {
-                            customEtas.push(finalEtalase);
-                            localStorage.setItem('customEtalases', JSON.stringify(customEtas));
-                        }
+                        customEtalaseSaved = fetch('/product/etalase/store?role={{ request("role") ?? "owner" }}', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            body: JSON.stringify({ name: finalEtalase })
+                        }).catch(e => console.error(e));
                     }
                 }
                 
@@ -1286,7 +1281,6 @@
         function toggleNewEtalaseInput(selectEl) {
             const newEtalaseInput = document.getElementById('newEtalaseInput');
             const delBtn = document.getElementById('deleteEtalaseBtn');
-            const customEtas = JSON.parse(localStorage.getItem('customEtalases') || '[]');
             if (selectEl.value === 'new') {
                 newEtalaseInput.style.display = 'block';
                 newEtalaseInput.focus();
@@ -1294,14 +1288,17 @@
             } else {
                 newEtalaseInput.style.display = 'none';
                 newEtalaseInput.value = ''; // clear when not used
-                if (delBtn) delBtn.style.display = customEtas.includes(selectEl.value) ? 'inline-block' : 'none';
+                if (delBtn) {
+                    const opt = selectEl.options[selectEl.selectedIndex];
+                    const isCustom = opt && opt.getAttribute('data-custom') === '1';
+                    delBtn.style.display = isCustom ? 'inline-block' : 'none';
+                }
             }
         }
 
         function toggleNewCategoryInput(selectEl) {
             const newCategoryInput = document.getElementById('newCategoryInput');
             const delBtn = document.getElementById('deleteCategoryBtn');
-            const customCats = JSON.parse(localStorage.getItem('customCategories') || '[]');
             if (selectEl.value === 'new') {
                 newCategoryInput.style.display = 'block';
                 newCategoryInput.focus();
@@ -1309,7 +1306,11 @@
             } else {
                 newCategoryInput.style.display = 'none';
                 newCategoryInput.value = ''; // clear when not used
-                if (delBtn) delBtn.style.display = customCats.includes(selectEl.value) ? 'inline-block' : 'none';
+                if (delBtn) {
+                    const opt = selectEl.options[selectEl.selectedIndex];
+                    const isCustom = opt && opt.getAttribute('data-custom') === '1';
+                    delBtn.style.display = isCustom ? 'inline-block' : 'none';
+                }
             }
         }
 
@@ -1329,16 +1330,24 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    let customCats = JSON.parse(localStorage.getItem('customCategories') || '[]');
-                    customCats = customCats.filter(c => c !== val);
-                    localStorage.setItem('customCategories', JSON.stringify(customCats));
-                    
-                    const optionToRemove = selectEl.querySelector(`option[value="${val}"]`);
-                    if (optionToRemove) optionToRemove.remove();
-                    
-                    selectEl.value = '';
-                    toggleNewCategoryInput(selectEl);
-                    Swal.fire('Terhapus!', 'Kategori berhasil dihapus.', 'success');
+                    fetch('/product/category/delete?role={{ request("role") ?? "owner" }}', {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: JSON.stringify({ name: val })
+                    }).then(res => res.json()).then(data => {
+                        if (data.success) {
+                            const optionToRemove = selectEl.querySelector(`option[value="${val}"]`);
+                            if (optionToRemove) optionToRemove.remove();
+                            selectEl.value = '';
+                            toggleNewCategoryInput(selectEl);
+                            Swal.fire('Terhapus!', 'Kategori berhasil dihapus.', 'success');
+                        } else {
+                            Swal.fire('Gagal!', 'Gagal menghapus kategori.', 'error');
+                        }
+                    }).catch(err => {
+                        console.error(err);
+                        Swal.fire('Gagal!', 'Gagal menghapus kategori.', 'error');
+                    });
                 }
             });
         }
@@ -1359,16 +1368,24 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    let customEtas = JSON.parse(localStorage.getItem('customEtalases') || '[]');
-                    customEtas = customEtas.filter(e => e !== val);
-                    localStorage.setItem('customEtalases', JSON.stringify(customEtas));
-                    
-                    const optionToRemove = selectEl.querySelector(`option[value="${val}"]`);
-                    if (optionToRemove) optionToRemove.remove();
-                    
-                    selectEl.value = '';
-                    toggleNewEtalaseInput(selectEl);
-                    Swal.fire('Terhapus!', 'Etalase berhasil dihapus.', 'success');
+                    fetch('/product/etalase/delete?role={{ request("role") ?? "owner" }}', {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: JSON.stringify({ name: val })
+                    }).then(res => res.json()).then(data => {
+                        if (data.success) {
+                            const optionToRemove = selectEl.querySelector(`option[value="${val}"]`);
+                            if (optionToRemove) optionToRemove.remove();
+                            selectEl.value = '';
+                            toggleNewEtalaseInput(selectEl);
+                            Swal.fire('Terhapus!', 'Etalase berhasil dihapus.', 'success');
+                        } else {
+                            Swal.fire('Gagal!', 'Gagal menghapus etalase.', 'error');
+                        }
+                    }).catch(err => {
+                        console.error(err);
+                        Swal.fire('Gagal!', 'Gagal menghapus etalase.', 'error');
+                    });
                 }
             });
         }

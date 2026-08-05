@@ -15,6 +15,11 @@ Route::post('/product/store', [ProductController::class, 'store']);
 Route::post('/product/toggle-status/{id}', [ProductController::class, 'toggleStatus']);
 Route::delete('/product/delete/{id}', [ProductController::class, 'destroy']);
 
+// API Routes for Category & Etalase in Product Form
+Route::post('/product/category/store', [ProductController::class, 'storeCategory']);
+Route::delete('/product/category/delete', [ProductController::class, 'deleteCategory']);
+Route::post('/product/etalase/store', [ProductController::class, 'storeEtalase']);
+Route::delete('/product/etalase/delete', [ProductController::class, 'deleteEtalase']);
 Route::get('/register', function () {
     return view('register');
 });
@@ -125,25 +130,7 @@ Route::get('/dashboard', function () {
     return view('home', compact('categories', 'products', 'features', 'steps', 'role'));
 });
 
-Route::get('/seller', function () {
-    if (strtolower(request()->query('role', 'Member')) !== 'owner') {
-        return redirect('/');
-    }
-    $role = request()->query('role', 'member');
-
-    $stats = [
-        'pesanan_baru' => 12,
-        'siap_kirim' => 45,
-        'dikomplain' => 2,
-        'chat_baru' => 8,
-        'pendapatan' => 'Rp 45.500.000',
-        'pengunjung' => 1250,
-    ];
-
-    $products = Product::orderBy('created_at', 'desc')->get();
-
-    return view('seller', compact('role', 'stats', 'products'));
-});
+// Duplicate routes removed for /seller and /product/form
 
 use App\Http\Controllers\OrderController;
 
@@ -153,13 +140,6 @@ Route::get('/orders/{id}', [OrderController::class, 'show']);
 Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 Route::post('/checkout/submit', [OrderController::class, 'store']);
 Route::get('/member/prospek', [OrderController::class, 'history']);
-
-Route::get('/product/form', function () {
-    if (strtolower(request()->query('role', 'Member')) !== 'owner') {
-        return redirect('/');
-    }
-    return view('product_form');
-});
 
 Route::get('/product/detail', function () {
     $role = request()->query('role', 'member');
