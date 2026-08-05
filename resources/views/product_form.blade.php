@@ -692,6 +692,7 @@
                             <option value="new" style="font-weight: bold; color: var(--tk-green);">+ Tambah Kategori Baru</option>
                         </select>
                         <input type="text" id="newCategoryInput" class="form-input" placeholder="Ketik nama kategori baru..." style="display: none; margin-top: 10px;">
+                        <button type="button" id="deleteCategoryBtn" style="display: none; margin-top: 10px; font-size: 13px; color: var(--tk-danger); background: transparent; border: 1px solid var(--tk-danger); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-weight: 600;" onclick="deleteCustomCategory()">Hapus Kategori Ini</button>
                     </div>
 
                     <div class="form-group">
@@ -704,6 +705,7 @@
                             <option value="new" style="font-weight: bold; color: var(--tk-green);">+ Tambah Etalase Baru</option>
                         </select>
                         <input type="text" id="newEtalaseInput" class="form-input" placeholder="Ketik nama etalase baru..." style="display: none; margin-top: 10px;">
+                        <button type="button" id="deleteEtalaseBtn" style="display: none; margin-top: 10px; font-size: 13px; color: var(--tk-danger); background: transparent; border: 1px solid var(--tk-danger); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-weight: 600;" onclick="deleteCustomEtalase()">Hapus Etalase Ini</button>
                     </div>
 
                 </div>
@@ -787,6 +789,10 @@
                     catSelect.insertBefore(opt, newOptionCat);
                 });
             }
+            if (catSelect && customCats.includes(catSelect.value)) {
+                const delBtn = document.getElementById('deleteCategoryBtn');
+                if (delBtn) delBtn.style.display = 'inline-block';
+            }
 
             const customEtas = JSON.parse(localStorage.getItem('customEtalases') || '[]');
             const etaSelect = document.getElementById('productEtalaseInput');
@@ -798,6 +804,10 @@
                     opt.textContent = eta;
                     etaSelect.insertBefore(opt, newOptionEta);
                 });
+            }
+            if (etaSelect && customEtas.includes(etaSelect.value)) {
+                const delBtn = document.getElementById('deleteEtalaseBtn');
+                if (delBtn) delBtn.style.display = 'inline-block';
             }
 
             // ========== TABLE OF CONTENTS SCROLL SPY ==========
@@ -1275,24 +1285,92 @@
 
         function toggleNewEtalaseInput(selectEl) {
             const newEtalaseInput = document.getElementById('newEtalaseInput');
+            const delBtn = document.getElementById('deleteEtalaseBtn');
+            const customEtas = JSON.parse(localStorage.getItem('customEtalases') || '[]');
             if (selectEl.value === 'new') {
                 newEtalaseInput.style.display = 'block';
                 newEtalaseInput.focus();
+                if (delBtn) delBtn.style.display = 'none';
             } else {
                 newEtalaseInput.style.display = 'none';
                 newEtalaseInput.value = ''; // clear when not used
+                if (delBtn) delBtn.style.display = customEtas.includes(selectEl.value) ? 'inline-block' : 'none';
             }
         }
 
         function toggleNewCategoryInput(selectEl) {
             const newCategoryInput = document.getElementById('newCategoryInput');
+            const delBtn = document.getElementById('deleteCategoryBtn');
+            const customCats = JSON.parse(localStorage.getItem('customCategories') || '[]');
             if (selectEl.value === 'new') {
                 newCategoryInput.style.display = 'block';
                 newCategoryInput.focus();
+                if (delBtn) delBtn.style.display = 'none';
             } else {
                 newCategoryInput.style.display = 'none';
                 newCategoryInput.value = ''; // clear when not used
+                if (delBtn) delBtn.style.display = customCats.includes(selectEl.value) ? 'inline-block' : 'none';
             }
+        }
+
+        function deleteCustomCategory() {
+            const selectEl = document.getElementById('productCategoryInput');
+            const val = selectEl.value;
+            if (!val || val === 'new') return;
+            
+            Swal.fire({
+                title: 'Hapus Kategori?',
+                text: `Anda yakin ingin menghapus kategori "${val}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF144A',
+                cancelButtonColor: '#AAB4C8',
+                confirmButtonText: 'Ya, hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let customCats = JSON.parse(localStorage.getItem('customCategories') || '[]');
+                    customCats = customCats.filter(c => c !== val);
+                    localStorage.setItem('customCategories', JSON.stringify(customCats));
+                    
+                    const optionToRemove = selectEl.querySelector(`option[value="${val}"]`);
+                    if (optionToRemove) optionToRemove.remove();
+                    
+                    selectEl.value = '';
+                    toggleNewCategoryInput(selectEl);
+                    Swal.fire('Terhapus!', 'Kategori berhasil dihapus.', 'success');
+                }
+            });
+        }
+
+        function deleteCustomEtalase() {
+            const selectEl = document.getElementById('productEtalaseInput');
+            const val = selectEl.value;
+            if (!val || val === 'new') return;
+            
+            Swal.fire({
+                title: 'Hapus Etalase?',
+                text: `Anda yakin ingin menghapus etalase "${val}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF144A',
+                cancelButtonColor: '#AAB4C8',
+                confirmButtonText: 'Ya, hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let customEtas = JSON.parse(localStorage.getItem('customEtalases') || '[]');
+                    customEtas = customEtas.filter(e => e !== val);
+                    localStorage.setItem('customEtalases', JSON.stringify(customEtas));
+                    
+                    const optionToRemove = selectEl.querySelector(`option[value="${val}"]`);
+                    if (optionToRemove) optionToRemove.remove();
+                    
+                    selectEl.value = '';
+                    toggleNewEtalaseInput(selectEl);
+                    Swal.fire('Terhapus!', 'Etalase berhasil dihapus.', 'success');
+                }
+            });
         }
     </script>
 </body>
