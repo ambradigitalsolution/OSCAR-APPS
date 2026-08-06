@@ -566,26 +566,33 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <a href="#">Kategori</a>
+            <a href="#">{{ $product->category ?? 'Kategori' }}</a>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <span>App Oscar Premium Product</span>
+            <span>{{ $product->name }}</span>
         </div>
 
         <div class="bento-product-grid">
             <!-- Left: Image Gallery (Bento Card 1) -->
             <div class="bento-card bento-gallery product-gallery">
+                @php
+                    $images = is_array($product->images) ? $product->images : [];
+                    $firstImage = count($images) > 0 ? $images[0] : 'assets/hp.png';
+                @endphp
                 <div class="main-image-container">
-                    <img id="mainImage" src="{{ asset($product['image'] ?? 'assets/hp.png') }}" alt="Product Image">
+                    <img id="mainImage" src="{{ asset($firstImage) }}" alt="{{ $product->name }}">
+                    @if($product->category)
                     <div class="badge-premium">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#F59E0B"/>
                         </svg>
-                        Urban XDP
+                        {{ $product->category }}
                     </div>
+                    @endif
                 </div>
 
+                @if(count($images) > 1)
                 <div class="thumbnails-wrapper">
                     <button class="thumb-nav-btn prev" onclick="scrollThumbs('left')">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -594,30 +601,11 @@
                     </button>
                     
                     <div class="thumbnail-list" id="thumbnailList">
-                        <div class="thumbnail-item active" onclick="changeImage(this, '{{ asset('assets/hp.png') }}')">
-                            <img src="{{ asset('assets/hp.png') }}" alt="Thumb 1">
+                        @foreach($images as $index => $img)
+                        <div class="thumbnail-item {{ $index === 0 ? 'active' : '' }}" onclick="changeImage(this, '{{ asset($img) }}')">
+                            <img src="{{ asset($img) }}" alt="Thumb {{ $index + 1 }}">
                         </div>
-                        <div class="thumbnail-item" onclick="changeImage(this, '{{ asset('assets/laptop.png') }}')">
-                            <img src="{{ asset('assets/laptop.png') }}" alt="Thumb 2">
-                        </div>
-                        <div class="thumbnail-item" onclick="changeImage(this, '{{ asset('assets/camera.png') }}')">
-                            <img src="{{ asset('assets/camera.png') }}" alt="Thumb 3">
-                        </div>
-                        <div class="thumbnail-item" onclick="changeImage(this, '{{ asset('assets/tv.png') }}')">
-                            <img src="{{ asset('assets/tv.png') }}" alt="Thumb 4">
-                        </div>
-                        <div class="thumbnail-item" onclick="changeImage(this, '{{ asset('assets/earphone.png') }}')">
-                            <img src="{{ asset('assets/earphone.png') }}" alt="Thumb 5">
-                        </div>
-                        <div class="thumbnail-item" onclick="changeImage(this, '{{ asset('assets/server.png') }}')">
-                            <img src="{{ asset('assets/server.png') }}" alt="Thumb 6">
-                        </div>
-                        <div class="thumbnail-item" onclick="changeImage(this, '{{ asset('assets/pc.png') }}')">
-                            <img src="{{ asset('assets/pc.png') }}" alt="Thumb 7">
-                        </div>
-                        <div class="thumbnail-item" onclick="changeImage(this, '{{ asset('assets/infokus.png') }}')">
-                            <img src="{{ asset('assets/infokus.png') }}" alt="Thumb 8">
-                        </div>
+                        @endforeach
                     </div>
 
                     <button class="thumb-nav-btn next" onclick="scrollThumbs('right')">
@@ -626,6 +614,7 @@
                         </svg>
                     </button>
                 </div>
+                @endif
             </div>
 
             <!-- Middle: Product Info (Bento Card 2) -->
@@ -641,15 +630,11 @@
                         <div class="desc-tab active">Deskripsi Produk</div>
                     </div>
                     <div class="desc-content">
-                        <p><strong>App Oscar Produk Unggulan</strong> dirancang khusus untuk operasional perusahaan yang menginginkan kualitas tahan lama dan berkelas. Terinspirasi dari kehidupan kota yang dinamis, produk ini memadukan fungsionalitas terbaik dengan sentuhan premium.</p>
-                        <ul>
-                            <li><strong>Top Notes:</strong> Bergamot, Green Apple, Mint</li>
-                            <li><strong>Middle Notes:</strong> Lavender, Cedarwood, Geranium</li>
-                            <li><strong>Base Notes:</strong> Vetiver, Amber, Musk</li>
-                            <li><strong>Ketahanan:</strong> 8 - 12 Jam (Tergantung aktivitas)</li>
-                            <li><strong>Volume:</strong> 100 ml</li>
-                        </ul>
-                        <p>Cocok digunakan untuk aktivitas sehari-hari, meeting kantor, hingga acara formal di malam hari. Dikemas dalam botol eksklusif berwarna hijau gelap yang memberikan kesan premium.</p>
+                        @if($product->description)
+                            {!! nl2br(e($product->description)) !!}
+                        @else
+                            <p style="color: #94a3b8; font-style: italic;">Belum ada deskripsi untuk produk ini.</p>
+                        @endif
                     </div>
                 </div>
             </div>
