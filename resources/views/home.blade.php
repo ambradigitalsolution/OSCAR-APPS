@@ -521,12 +521,12 @@
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
-                <div style="position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background-color: white;">
+                <div style="position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background-color: white; display: flex; justify-content: center; align-items: center;">
                     <!-- New Tag -->
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
 
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;">
                 </div>
                 
                 <!-- Content Area -->
@@ -569,9 +569,9 @@
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
-                <div style="position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background-color: white;">
+                <div style="position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background-color: white; display: flex; justify-content: center; align-items: center;">
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;">
                 </div>
                 
                 <!-- Content Area -->
@@ -807,9 +807,9 @@ document.addEventListener('DOMContentLoaded', function() {
         [...addedProducts].reverse().forEach(prod => {
             const cardHTML = `
             <div class="card-item" onclick="window.location.href='/product/detail?id=${prod.id}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
-                <div style="position: relative; width: 100%; aspect-ratio: 1/1; background-color: white; overflow: hidden;">
+                <div style="position: relative; width: 100%; aspect-ratio: 1/1; background-color: white; overflow: hidden; display: flex; justify-content: center; align-items: center;">
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
-                    <img src="${prod.image}" alt="Product" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    <img src="${prod.image}" alt="Product" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;">
                 </div>
                 <div style="padding: 12px; display: flex; flex-direction: column; flex-grow: 1;">
                     <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
