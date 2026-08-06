@@ -84,11 +84,7 @@ class ProductController extends Controller
         if ($id) {
             $product = Product::find($id);
             if ($product) {
-                if (empty($data['images'])) {
-                    $data['images'] = $product->images;
-                } else {
-                    $data['images'] = $imagePaths;
-                }
+                $data['images'] = $imagePaths;
                 $product->update($data);
                 return response()->json(['success' => true, 'message' => 'Produk berhasil diubah', 'id' => $product->id]);
             }
