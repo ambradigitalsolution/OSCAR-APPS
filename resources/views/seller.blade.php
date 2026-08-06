@@ -411,9 +411,9 @@
                             <div class="td-stack">
                                 <div class="td-val">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;color:var(--tk-text-third);margin-right:2px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    {{ number_format($product->views) }}
+                                    {{ number_format($product->views, 0, ',', '.') }}
                                 </div>
-                                <div class="td-sub">Penjualan: {{ number_format($product->sales) }}</div>
+                                <div class="td-sub">Penjualan: {{ number_format($product->sales, 0, ',', '.') }}</div>
                             </div>
                         </td>
                         <td>
@@ -476,11 +476,11 @@
                         </div>
                         <div class="m-card-stat">
                             <div class="label">Tayangan</div>
-                            <div class="value">{{ number_format($product->views) }}</div>
+                            <div class="value">{{ number_format($product->views, 0, ',', '.') }}</div>
                         </div>
                         <div class="m-card-stat">
                             <div class="label">Penjualan</div>
-                            <div class="value">{{ number_format($product->sales) }}</div>
+                            <div class="value">{{ number_format($product->sales, 0, ',', '.') }}</div>
                         </div>
                     </div>
                     <div class="m-card-footer">
