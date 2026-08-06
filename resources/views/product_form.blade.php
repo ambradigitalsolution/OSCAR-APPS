@@ -891,9 +891,29 @@
                 return box;
             }
 
+            const existingImages = {!! json_encode(isset($product) && is_array($product->images) ? $product->images : (isset($product) && $product->images && is_string($product->images) ? json_decode($product->images, true) : [])) !!} || [];
+
             // Initialize all photo boxes
             for (let i = 0; i < TOTAL_SLOTS; i++) {
-                photoGrid.appendChild(createPhotoBox(i));
+                const box = createPhotoBox(i);
+                photoGrid.appendChild(box);
+                
+                if (existingImages[i]) {
+                    compressedPhotos[i] = { base64: existingImages[i] };
+                    
+                    const img = document.createElement('img');
+                    img.className = 'photo-preview';
+                    img.src = existingImages[i].startsWith('data:image') || existingImages[i].startsWith('http') ? existingImages[i] : '/' + existingImages[i].replace(/^\\//, '');
+                    img.alt = \`Foto \${i + 1}\`;
+                    box.insertBefore(img, box.firstChild);
+
+                    const plusIcon = box.querySelector('.plus-icon');
+                    const label = box.querySelector('.photo-label');
+                    if (plusIcon) plusIcon.style.display = 'none';
+                    if (label) label.style.display = 'none';
+
+                    box.classList.add('has-photo');
+                }
             }
 
             // Format file size
