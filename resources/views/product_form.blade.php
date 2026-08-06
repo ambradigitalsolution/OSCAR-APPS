@@ -434,6 +434,78 @@
             bottom: 22px;
         }
 
+        /* Upload status badge */
+        .photo-box .upload-status {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            z-index: 7;
+            display: none;
+        }
+        .photo-box.has-photo .upload-status {
+            display: block;
+        }
+        .upload-status.uploading {
+            background: #FF9800;
+            color: #fff;
+        }
+        .upload-status.uploaded {
+            background: var(--tk-green);
+            color: #fff;
+        }
+        .upload-status.failed {
+            background: var(--tk-danger);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Camera action buttons for mobile */
+        .camera-action-btns {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 8;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.97);
+        }
+        .camera-action-btns.show {
+            display: flex;
+        }
+        .camera-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 1px solid var(--tk-border);
+            border-radius: 8px;
+            background: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--tk-text);
+            cursor: pointer;
+            transition: all 0.15s;
+            width: 85%;
+            justify-content: center;
+        }
+        .camera-action-btn:hover {
+            border-color: var(--tk-green);
+            color: var(--tk-green);
+            background: rgba(0,170,91,0.04);
+        }
+        .camera-action-btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
         /* Compression toast notification */
         .compress-toast {
             position: fixed;
@@ -660,9 +732,13 @@
                     <div class="form-group">
                         <label class="form-label">Foto Produk <span class="req">*</span></label>
                         <div class="form-hint" style="margin-bottom:6px;">Format gambar .jpg .jpeg .png dan ukuran minimum 300 x 300px (Untuk gambar optimal gunakan ukuran minimum 700 x 700px).</div>
-                        <div class="form-hint" style="margin-bottom:12px; color: var(--tk-green); font-weight: 600;">
+                        <div class="form-hint" style="margin-bottom:8px; color: var(--tk-green); font-weight: 600;">
                             <svg style="width:13px;height:13px;vertical-align:-2px;margin-right:3px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                            Foto otomatis di-compress oleh sistem (max 800×800px, kualitas 80%)
+                            Foto otomatis di-compress & upload langsung ke server (max 800×800px)
+                        </div>
+                        <div class="form-hint" style="margin-bottom:12px; color: var(--tk-text-sec);">
+                            <svg style="width:13px;height:13px;vertical-align:-2px;margin-right:3px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg>
+                            Tap foto untuk ambil dari <strong>Kamera</strong> atau <strong>Galeri</strong>
                         </div>
                         
                         <div class="photo-grid" id="photoGrid">
@@ -851,18 +927,25 @@
                 });
             }
 
-            // ========== AUTO COMPRESS PHOTO UPLOAD SYSTEM ==========
+            // ========== AUTO COMPRESS + UPLOAD PHOTO SYSTEM ==========
             const TOTAL_SLOTS = 20;
             const MAX_WIDTH = 800;
             const MAX_HEIGHT = 800;
             const QUALITY = 0.8;
             const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
             const MIN_DIMENSION = 300;
+            const UPLOAD_URL = '/product/upload-image?role={{ request("role") ?? "owner" }}';
+            const CSRF_TOKEN = '{{ csrf_token() }}';
+            const MAX_RETRIES = 2;
 
             const photoGrid = document.getElementById('photoGrid');
-            const compressedPhotos = new Array(TOTAL_SLOTS).fill(null); // Store compressed blobs
+            // Each slot stores: { serverPath, previewUrl, originalSize, compressedSize, uploaded } or null
+            const photoSlots = new Array(TOTAL_SLOTS).fill(null);
 
-            // Generate photo boxes
+            // Detect if device has camera (mobile)
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || ('ontouchstart' in window);
+
+            // Generate photo boxes with camera + gallery options
             function createPhotoBox(index) {
                 const isMain = index === 0;
                 const box = document.createElement('div');
@@ -873,12 +956,24 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                     </svg>
                     <span class="photo-label">${isMain ? 'Foto Utama' : 'Foto ' + (index + 1)}</span>
-                    <input type="file" accept="image/*" capture="environment" id="photoInput${index}">
+                    <input type="file" accept="image/*" capture="environment" class="camera-input" style="display:none">
+                    <input type="file" accept="image/*" class="gallery-input" style="display:none">
+                    <div class="camera-action-btns" id="cameraActions${index}">
+                        <button type="button" class="camera-action-btn" data-action="camera">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/></svg>
+                            📷 Kamera
+                        </button>
+                        <button type="button" class="camera-action-btn" data-action="gallery">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+                            📁 Galeri
+                        </button>
+                    </div>
                     <div class="compress-overlay">
                         <div class="compress-spinner"></div>
-                        <span class="compress-text">Compressing...</span>
+                        <span class="compress-text">Mengupload...</span>
                     </div>
                     <div class="compress-progress"><div class="bar"></div></div>
+                    <span class="upload-status"></span>
                     <span class="size-badge"></span>
                     <button type="button" class="photo-delete-btn" title="Hapus foto">
                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -898,7 +993,8 @@
                 photoGrid.appendChild(box);
                 
                 if (existingImages[i]) {
-                    compressedPhotos[i] = { base64: existingImages[i] };
+                    // Existing images are already server paths
+                    photoSlots[i] = { serverPath: existingImages[i], uploaded: true };
                     
                     const img = document.createElement('img');
                     img.className = 'photo-preview';
@@ -910,6 +1006,11 @@
                     const label = box.querySelector('.photo-label');
                     if (plusIcon) plusIcon.style.display = 'none';
                     if (label) label.style.display = 'none';
+
+                    // Show uploaded status
+                    const statusBadge = box.querySelector('.upload-status');
+                    statusBadge.textContent = '✓ Tersimpan';
+                    statusBadge.className = 'upload-status uploaded';
 
                     box.classList.add('has-photo');
                 }
@@ -923,12 +1024,16 @@
             }
 
             // Show compression toast notification
-            function showToast(originalSize, compressedSize) {
+            function showToast(title, detail, isError) {
                 const toast = document.getElementById('compressToast');
-                const saved = Math.round((1 - compressedSize / originalSize) * 100);
-                document.getElementById('toastTitle').textContent = 'Foto berhasil di-compress!';
-                document.getElementById('toastDetail').textContent = 
-                    `${formatSize(originalSize)} → ${formatSize(compressedSize)} (hemat ${saved}%)`;
+                const icon = toast.querySelector('.toast-icon');
+                document.getElementById('toastTitle').textContent = title;
+                document.getElementById('toastDetail').textContent = detail;
+                if (isError) {
+                    icon.style.background = 'var(--tk-danger)';
+                } else {
+                    icon.style.background = 'var(--tk-green)';
+                }
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3500);
             }
@@ -963,7 +1068,6 @@
                             // Use high quality image smoothing
                             ctx.imageSmoothingEnabled = true;
                             ctx.imageSmoothingQuality = 'high';
-                            // drawImage(source, srcX, srcY, srcW, srcH, destX, destY, destW, destH)
                             ctx.drawImage(img, cropX, cropY, cropSize, cropSize, 0, 0, outputSize, outputSize);
 
                             // Try WebP first, fallback to JPEG
@@ -976,24 +1080,20 @@
                                         resolve({
                                             blob: jpegBlob,
                                             url: URL.createObjectURL(jpegBlob),
-                                            base64: canvas.toDataURL('image/jpeg', QUALITY),
                                             originalSize: file.size,
                                             compressedSize: jpegBlob.size,
-                                            width: outputSize,
-                                            height: outputSize,
-                                            type: outputType
+                                            type: outputType,
+                                            extension: 'jpg'
                                         });
                                     }, 'image/jpeg', QUALITY);
                                 } else {
                                     resolve({
                                         blob: blob,
                                         url: URL.createObjectURL(blob),
-                                        base64: canvas.toDataURL(outputType, QUALITY),
                                         originalSize: file.size,
                                         compressedSize: blob.size,
-                                        width: outputSize,
-                                        height: outputSize,
-                                        type: outputType
+                                        type: outputType,
+                                        extension: 'webp'
                                     });
                                 }
                             }, outputType, QUALITY);
@@ -1006,44 +1106,116 @@
                 });
             }
 
-            // Handle file selection for a photo box
+            // Upload compressed blob to server with retry
+            async function uploadToServer(blob, extension, retries) {
+                const formData = new FormData();
+                const fileName = `photo_${Date.now()}.${extension}`;
+                formData.append('photo', blob, fileName);
+                formData.append('_token', CSRF_TOKEN);
+
+                for (let attempt = 0; attempt <= (retries || MAX_RETRIES); attempt++) {
+                    try {
+                        const response = await fetch(UPLOAD_URL, {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (!response.ok) {
+                            const text = await response.text();
+                            let errorMsg = `Server error ${response.status}`;
+                            try {
+                                const json = JSON.parse(text);
+                                errorMsg = json.message || json.error || errorMsg;
+                            } catch(e) {}
+                            throw new Error(errorMsg);
+                        }
+
+                        const data = await response.json();
+                        if (data.success) {
+                            return data; // { success, path, size }
+                        } else {
+                            throw new Error(data.error || data.message || 'Upload gagal');
+                        }
+                    } catch (err) {
+                        if (attempt < (retries || MAX_RETRIES)) {
+                            // Wait before retry (exponential backoff)
+                            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+                            continue;
+                        }
+                        throw err;
+                    }
+                }
+            }
+
+            // Handle file selection for a photo box - compress then upload
             async function handleFileSelect(box, file) {
                 const index = parseInt(box.dataset.index);
 
+                // Hide camera action buttons
+                const cameraActions = box.querySelector('.camera-action-btns');
+                if (cameraActions) cameraActions.classList.remove('show');
+
                 // Validate file type
                 if (!ACCEPTED_TYPES.includes(file.type)) {
-                    alert('Format file tidak didukung. Gunakan .jpg, .jpeg, .png, atau .webp');
+                    Swal.fire({
+                        title: 'Format Tidak Didukung',
+                        text: 'Gunakan format .jpg, .jpeg, .png, atau .webp',
+                        icon: 'warning',
+                        confirmButtonColor: '#00AA5B'
+                    });
                     return;
                 }
 
                 // Validate file size (max 10MB before compression)
                 if (file.size > 10 * 1024 * 1024) {
-                    alert('Ukuran file terlalu besar. Maksimal 10MB.');
+                    Swal.fire({
+                        title: 'File Terlalu Besar',
+                        text: 'Ukuran file maksimal 10MB sebelum kompresi.',
+                        icon: 'warning',
+                        confirmButtonColor: '#00AA5B'
+                    });
                     return;
                 }
 
-                // Show compression overlay
+                // Show processing overlay
                 const overlay = box.querySelector('.compress-overlay');
+                const overlayText = box.querySelector('.compress-text');
                 const progressBar = box.querySelector('.compress-progress .bar');
+                const statusBadge = box.querySelector('.upload-status');
                 overlay.classList.add('active');
-                progressBar.style.width = '30%';
+                overlayText.textContent = 'Compressing...';
+                progressBar.style.width = '20%';
 
                 try {
-                    // Simulate progress steps for UX
-                    await new Promise(r => setTimeout(r, 200));
-                    progressBar.style.width = '60%';
+                    // Step 1: Compress
+                    await new Promise(r => setTimeout(r, 150));
+                    progressBar.style.width = '40%';
 
                     const result = await compressImage(file);
 
-                    progressBar.style.width = '90%';
-                    await new Promise(r => setTimeout(r, 150));
-                    progressBar.style.width = '100%';
+                    progressBar.style.width = '50%';
+                    overlayText.textContent = 'Mengupload...';
 
-                    // Store compressed blob
-                    compressedPhotos[index] = result;
+                    // Step 2: Upload compressed blob to server
+                    progressBar.style.width = '70%';
+                    const uploadResult = await uploadToServer(result.blob, result.extension);
+                    
+                    progressBar.style.width = '100%';
+                    await new Promise(r => setTimeout(r, 200));
+
+                    // Step 3: Store server path (NOT base64!)
+                    if (photoSlots[index] && photoSlots[index].previewUrl) {
+                        URL.revokeObjectURL(photoSlots[index].previewUrl);
+                    }
+                    photoSlots[index] = {
+                        serverPath: uploadResult.path,
+                        previewUrl: result.url,
+                        originalSize: result.originalSize,
+                        compressedSize: result.compressedSize,
+                        uploaded: true
+                    };
 
                     // Update UI - show preview
-                    // Remove existing preview if any
                     const existingImg = box.querySelector('img.photo-preview');
                     if (existingImg) existingImg.remove();
 
@@ -1063,14 +1235,48 @@
                     const sizeBadge = box.querySelector('.size-badge');
                     sizeBadge.textContent = formatSize(result.compressedSize);
 
+                    // Show upload status
+                    statusBadge.textContent = '✓ Uploaded';
+                    statusBadge.className = 'upload-status uploaded';
+
                     // Mark as has-photo
                     box.classList.add('has-photo');
 
-                    // Show toast
-                    showToast(result.originalSize, result.compressedSize);
+                    // Show success toast
+                    const saved = Math.round((1 - result.compressedSize / result.originalSize) * 100);
+                    showToast(
+                        'Foto berhasil diupload!',
+                        `${formatSize(result.originalSize)} → ${formatSize(result.compressedSize)} (hemat ${saved}%)`,
+                        false
+                    );
 
                 } catch (error) {
-                    alert(error.message);
+                    console.error('Upload error:', error);
+                    
+                    // Show error status badge with retry
+                    statusBadge.textContent = '✕ Gagal - Tap retry';
+                    statusBadge.className = 'upload-status failed';
+                    statusBadge.onclick = function() {
+                        statusBadge.onclick = null;
+                        handleFileSelect(box, file);
+                    };
+
+                    Swal.fire({
+                        title: 'Gagal Upload Foto',
+                        html: `<div style="text-align:left;font-size:13px;">
+                            <p><strong>Error:</strong> ${error.message}</p>
+                            <p style="margin-top:8px;color:#6D7588;">Kemungkinan penyebab:</p>
+                            <ul style="color:#6D7588;margin-top:4px;">
+                                <li>Koneksi internet tidak stabil</li>
+                                <li>File gambar corrupt/rusak</li>
+                                <li>Server sedang sibuk</li>
+                            </ul>
+                            <p style="margin-top:8px;">Anda bisa tap <strong>"✕ Gagal - Tap retry"</strong> pada foto untuk mencoba lagi.</p>
+                        </div>`,
+                        icon: 'error',
+                        confirmButtonColor: '#EF144A',
+                        confirmButtonText: 'OK'
+                    });
                 } finally {
                     overlay.classList.remove('active');
                     setTimeout(() => { progressBar.style.width = '0%'; }, 500);
@@ -1082,10 +1288,10 @@
                 const index = parseInt(box.dataset.index);
                 
                 // Revoke object URL to free memory
-                if (compressedPhotos[index] && compressedPhotos[index].url) {
-                    URL.revokeObjectURL(compressedPhotos[index].url);
+                if (photoSlots[index] && photoSlots[index].previewUrl) {
+                    URL.revokeObjectURL(photoSlots[index].previewUrl);
                 }
-                compressedPhotos[index] = null;
+                photoSlots[index] = null;
 
                 // Remove preview image
                 const img = box.querySelector('img.photo-preview');
@@ -1100,9 +1306,18 @@
                 // Remove has-photo class
                 box.classList.remove('has-photo');
 
-                // Clear file input
-                const fileInput = box.querySelector('input[type="file"]');
-                if (fileInput) fileInput.value = '';
+                // Reset status badge
+                const statusBadge = box.querySelector('.upload-status');
+                statusBadge.textContent = '';
+                statusBadge.className = 'upload-status';
+                statusBadge.onclick = null;
+
+                // Clear file inputs
+                box.querySelectorAll('input[type="file"]').forEach(inp => inp.value = '');
+
+                // Hide camera actions
+                const cameraActions = box.querySelector('.camera-action-btns');
+                if (cameraActions) cameraActions.classList.remove('show');
             }
 
             // Event delegation for photo grid
@@ -1117,15 +1332,50 @@
                     return;
                 }
 
-                // Don't trigger file input if already has photo (must delete first)
+                // Handle camera action button clicks
+                const actionBtn = e.target.closest('.camera-action-btn');
+                if (actionBtn) {
+                    e.stopPropagation();
+                    const action = actionBtn.dataset.action;
+                    if (action === 'camera') {
+                        const cameraInput = box.querySelector('.camera-input');
+                        if (cameraInput) cameraInput.click();
+                    } else if (action === 'gallery') {
+                        const galleryInput = box.querySelector('.gallery-input');
+                        if (galleryInput) galleryInput.click();
+                    }
+                    // Hide action buttons after selection
+                    const cameraActions = box.querySelector('.camera-action-btns');
+                    if (cameraActions) cameraActions.classList.remove('show');
+                    return;
+                }
+
+                // Don't trigger if already has photo (must delete first)
                 if (box.classList.contains('has-photo')) return;
 
-                // Trigger file input
-                const fileInput = box.querySelector('input[type="file"]');
-                if (fileInput) fileInput.click();
+                // On mobile: show camera/gallery choice. On desktop: open file picker
+                if (isMobile) {
+                    const cameraActions = box.querySelector('.camera-action-btns');
+                    // Close all other open action menus
+                    document.querySelectorAll('.camera-action-btns.show').forEach(el => {
+                        if (el !== cameraActions) el.classList.remove('show');
+                    });
+                    if (cameraActions) cameraActions.classList.toggle('show');
+                } else {
+                    // Desktop: just open gallery input (no capture)
+                    const galleryInput = box.querySelector('.gallery-input');
+                    if (galleryInput) galleryInput.click();
+                }
             });
 
-            // Handle file input change
+            // Close camera action menus when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.photo-box')) {
+                    document.querySelectorAll('.camera-action-btns.show').forEach(el => el.classList.remove('show'));
+                }
+            });
+
+            // Handle file input change (both camera-input and gallery-input)
             photoGrid.addEventListener('change', function(e) {
                 if (e.target.type !== 'file') return;
                 const box = e.target.closest('.photo-box');
@@ -1133,7 +1383,7 @@
                 if (box && file) handleFileSelect(box, file);
             });
 
-            // Drag & drop support
+            // Drag & drop support (desktop)
             photoGrid.addEventListener('dragover', function(e) {
                 e.preventDefault();
                 const box = e.target.closest('.photo-box');
@@ -1159,6 +1409,7 @@
                 }
             });
 
+            // ========== SAVE PRODUCT ==========
             let isSaving = false;
             window.handleSave = function(isNew) {
                 if (isSaving) return;
@@ -1166,6 +1417,24 @@
                 const btnSave = document.querySelector('.header-right .btn-white');
                 const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
                 
+                function resetButtons() {
+                    isSaving = false;
+                    if (isNew && btnSaveNew) { btnSaveNew.innerHTML = 'Simpan & Tambah Baru'; btnSaveNew.style.opacity = '1'; btnSaveNew.style.pointerEvents = 'auto'; }
+                    if (!isNew && btnSave) { btnSave.innerHTML = 'Simpan'; btnSave.style.opacity = '1'; btnSave.style.pointerEvents = 'auto'; }
+                }
+
+                // Check if any photos are still uploading (failed)
+                const failedUploads = photoSlots.filter(s => s && !s.uploaded);
+                if (failedUploads.length > 0) {
+                    Swal.fire({
+                        title: 'Ada Foto Gagal Upload',
+                        text: 'Beberapa foto belum berhasil diupload. Hapus atau retry foto yang gagal terlebih dahulu.',
+                        icon: 'warning',
+                        confirmButtonColor: '#00AA5B'
+                    });
+                    return;
+                }
+
                 if (isNew && btnSaveNew) {
                     btnSaveNew.innerHTML = 'Menyimpan...';
                     btnSaveNew.style.opacity = '0.7';
@@ -1179,7 +1448,6 @@
                 
                 isSaving = true;
 
-                // Simpan produk ke localStorage
                 const productName = document.getElementById('productNameInput').value;
                 const productDesc = document.querySelector('.rt-area').innerHTML;
                 const productPriceRaw = document.getElementById('productPriceInput') ? document.getElementById('productPriceInput').value.replace(/[^0-9]/g, '') : 0;
@@ -1187,13 +1455,12 @@
                 
                 // Get Category
                 let finalCategory = document.getElementById('productCategoryInput').value;
-                let customCategorySaved = false;
                 if (finalCategory === 'new') {
                     finalCategory = document.getElementById('newCategoryInput').value;
                     if (finalCategory) {
-                        customCategorySaved = fetch('/product/category/store?role={{ request("role") ?? "owner" }}', {
+                        fetch('/product/category/store?role={{ request("role") ?? "owner" }}', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
                             body: JSON.stringify({ name: finalCategory })
                         }).catch(e => console.error(e));
                     }
@@ -1201,41 +1468,30 @@
                 
                 // Get Etalase
                 let finalEtalase = document.getElementById('productEtalaseInput').value;
-                let customEtalaseSaved = false;
                 if (finalEtalase === 'new') {
                     finalEtalase = document.getElementById('newEtalaseInput').value;
                     if (finalEtalase) {
-                        customEtalaseSaved = fetch('/product/etalase/store?role={{ request("role") ?? "owner" }}', {
+                        fetch('/product/etalase/store?role={{ request("role") ?? "owner" }}', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
                             body: JSON.stringify({ name: finalEtalase })
                         }).catch(e => console.error(e));
                     }
                 }
                 
-                let prodImage = 'assets/hp.png'; // Default mock image
-                let allImages = [];
-                
-                // Gunakan foto utama jika ada
-                if (compressedPhotos[0] && compressedPhotos[0].base64) {
-                    prodImage = compressedPhotos[0].base64;
-                }
-                
-                // Kumpulkan semua foto yang diunggah
-                for(let i=0; i<compressedPhotos.length; i++) {
-                    if (compressedPhotos[i] && compressedPhotos[i].base64) {
-                        allImages.push(compressedPhotos[i].base64);
+                // Collect server paths only (NOT base64!) — payload is now very small
+                const allImagePaths = [];
+                for (let i = 0; i < photoSlots.length; i++) {
+                    if (photoSlots[i] && photoSlots[i].serverPath) {
+                        allImagePaths.push(photoSlots[i].serverPath);
                     }
                 }
 
-                // Format Rupiah
-                const formattedPrice = "Rp " + new Intl.NumberFormat('id-ID').format(productPriceRaw || 0);
-
                 const newProduct = {
-                    _token: '{{ csrf_token() }}',
+                    _token: CSRF_TOKEN,
                     id: '{{ $product->id ?? '' }}',
                     name: productName,
-                    images: allImages,
+                    images: allImagePaths, // Just paths like "assets/products/prod_xxx.webp"
                     description: productDesc,
                     price: productPriceRaw,
                     stock: parseInt(productStockRaw) || 0,
@@ -1251,7 +1507,16 @@
                     },
                     body: JSON.stringify(newProduct)
                 })
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) {
+                        return res.text().then(t => {
+                            let msg = `Server error ${res.status}`;
+                            try { msg = JSON.parse(t).message || msg; } catch(e) {}
+                            throw new Error(msg);
+                        });
+                    }
+                    return res.json();
+                })
                 .then(data => {
                     if(data.success) {
                         Swal.fire({
@@ -1275,26 +1540,18 @@
                             icon: 'error',
                             confirmButtonColor: '#EF144A'
                         });
-                        isSaving = false;
-                        const btnSave = document.querySelector('.header-right .btn-white');
-                        const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
-                        if (isNew && btnSaveNew) { btnSaveNew.innerHTML = 'Simpan & Tambah Baru'; btnSaveNew.style.opacity = '1'; btnSaveNew.style.pointerEvents = 'auto'; }
-                        if (!isNew && btnSave) { btnSave.innerHTML = 'Simpan'; btnSave.style.opacity = '1'; btnSave.style.pointerEvents = 'auto'; }
+                        resetButtons();
                     }
                 })
                 .catch(err => {
-                    console.error(err);
+                    console.error('Save error:', err);
                     Swal.fire({
                         title: 'Gagal!',
-                        text: 'Terjadi kesalahan jaringan atau server saat menyimpan produk.',
+                        text: err.message || 'Terjadi kesalahan jaringan atau server saat menyimpan produk.',
                         icon: 'error',
                         confirmButtonColor: '#EF144A'
                     });
-                    isSaving = false;
-                    const btnSave = document.querySelector('.header-right .btn-white');
-                    const btnSaveNew = document.querySelector('.header-right .btn-outline-white');
-                    if (isNew && btnSaveNew) { btnSaveNew.innerHTML = 'Simpan & Tambah Baru'; btnSaveNew.style.opacity = '1'; btnSaveNew.style.pointerEvents = 'auto'; }
-                    if (!isNew && btnSave) { btnSave.innerHTML = 'Simpan'; btnSave.style.opacity = '1'; btnSave.style.pointerEvents = 'auto'; }
+                    resetButtons();
                 });
             };
         });

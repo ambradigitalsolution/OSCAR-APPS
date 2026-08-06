@@ -58,12 +58,14 @@ class ProductController extends Controller
             'status' => 'nullable|string',
         ]);
 
-        // Process Base64 images and save to files
+        // Process images - now accepts server paths directly (from uploadImage endpoint)
+        // Also still supports base64 as fallback for backward compatibility
         $imagePaths = [];
         if (!empty($data['images'])) {
-            foreach ($data['images'] as $base64Image) {
-                if (str_starts_with($base64Image, 'data:image')) {
-                    $imageParts = explode(";base64,", $base64Image);
+            foreach ($data['images'] as $image) {
+                if (str_starts_with($image, 'data:image')) {
+                    // Legacy base64 handling (backward compatible)
+                    $imageParts = explode(";base64,", $image);
                     $imageTypeAux = explode("image/", $imageParts[0]);
                     $imageType = $imageTypeAux[1];
                     $imageBase64 = base64_decode($imageParts[1]);
@@ -76,7 +78,8 @@ class ProductController extends Controller
                     file_put_contents(public_path($fileName), $imageBase64);
                     $imagePaths[] = $fileName;
                 } else {
-                    $imagePaths[] = $base64Image; // It's already a URL
+                    // Already a server path from uploadImage() - just use it directly
+                    $imagePaths[] = $image;
                 }
             }
         }
@@ -94,6 +97,41 @@ class ProductController extends Controller
         $product = Product::create($data);
         return response()->json(['success' => true, 'message' => 'Produk berhasil ditambahkan', 'id' => $product->id]);
     }
+
+    /**
+     * Upload a single compressed image file.
+     * Called per-photo from the frontend after client-side compression.
+     * Returns the server path so the frontend can include it in the final save payload.
+     */
+    public function uploadImage(Request $request)
+    {
+        $role = strtolower($request->query('role', 'member'));
+        if ($role !== 'owner') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'photo' => 'required|file|mimes:jpg,jpeg,png,webp|max:5120', // max 5MB
+        ]);
+
+        $file = $request->file('photo');
+        
+        if (!File::exists(public_path('assets/products'))) {
+            File::makeDirectory(public_path('assets/products'), 0755, true);
+        }
+
+        $extension = $file->getClientOriginalExtension() ?: 'webp';
+        $fileName = 'assets/products/' . uniqid('prod_') . '.' . $extension;
+        
+        $file->move(public_path('assets/products'), basename($fileName));
+
+        return response()->json([
+            'success' => true,
+            'path' => $fileName,
+            'size' => filesize(public_path($fileName)),
+        ]);
+    }
+
 
     public function toggleStatus(Request $request, $id)
     {

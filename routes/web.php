@@ -12,6 +12,7 @@ Route::get('/', function () {
 Route::get('/seller', [ProductController::class, 'index']);
 Route::get('/product/form', [ProductController::class, 'form']);
 Route::post('/product/store', [ProductController::class, 'store']);
+Route::post('/product/upload-image', [ProductController::class, 'uploadImage']);
 Route::post('/product/toggle-status/{id}', [ProductController::class, 'toggleStatus']);
 Route::delete('/product/delete/{id}', [ProductController::class, 'destroy']);
 
