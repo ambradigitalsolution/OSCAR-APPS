@@ -933,7 +933,7 @@
                 setTimeout(() => toast.classList.remove('show'), 3500);
             }
 
-            // Compress image using Canvas API
+            // Compress image using Canvas API + auto-crop to 1:1 square
             function compressImage(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -946,26 +946,25 @@
                                 return;
                             }
 
-                            // Calculate new dimensions maintaining aspect ratio
-                            let newWidth = img.width;
-                            let newHeight = img.height;
+                            // Auto-crop to 1:1 square from center
+                            const cropSize = Math.min(img.width, img.height);
+                            const cropX = Math.round((img.width - cropSize) / 2);
+                            const cropY = Math.round((img.height - cropSize) / 2);
 
-                            if (newWidth > MAX_WIDTH || newHeight > MAX_HEIGHT) {
-                                const ratio = Math.min(MAX_WIDTH / newWidth, MAX_HEIGHT / newHeight);
-                                newWidth = Math.round(newWidth * ratio);
-                                newHeight = Math.round(newHeight * ratio);
-                            }
+                            // Calculate output size (max 800x800)
+                            const outputSize = Math.min(cropSize, MAX_WIDTH);
 
-                            // Create canvas and draw resized image
+                            // Create canvas and draw cropped square image
                             const canvas = document.createElement('canvas');
-                            canvas.width = newWidth;
-                            canvas.height = newHeight;
+                            canvas.width = outputSize;
+                            canvas.height = outputSize;
                             const ctx = canvas.getContext('2d');
 
                             // Use high quality image smoothing
                             ctx.imageSmoothingEnabled = true;
                             ctx.imageSmoothingQuality = 'high';
-                            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                            // drawImage(source, srcX, srcY, srcW, srcH, destX, destY, destW, destH)
+                            ctx.drawImage(img, cropX, cropY, cropSize, cropSize, 0, 0, outputSize, outputSize);
 
                             // Try WebP first, fallback to JPEG
                             let outputType = 'image/webp';
@@ -980,8 +979,8 @@
                                             base64: canvas.toDataURL('image/jpeg', QUALITY),
                                             originalSize: file.size,
                                             compressedSize: jpegBlob.size,
-                                            width: newWidth,
-                                            height: newHeight,
+                                            width: outputSize,
+                                            height: outputSize,
                                             type: outputType
                                         });
                                     }, 'image/jpeg', QUALITY);
@@ -992,8 +991,8 @@
                                         base64: canvas.toDataURL(outputType, QUALITY),
                                         originalSize: file.size,
                                         compressedSize: blob.size,
-                                        width: newWidth,
-                                        height: newHeight,
+                                        width: outputSize,
+                                        height: outputSize,
                                         type: outputType
                                     });
                                 }
