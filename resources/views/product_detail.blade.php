@@ -620,7 +620,7 @@
                 <h1 class="product-title">{{ $product['name'] }}</h1>
                 
                 <div class="price-section" style="margin-top: 16px; margin-bottom: 24px;">
-                    <div class="price-current" id="detailPrice">{{ isset($product['price']) && is_numeric($product['price']) ? number_format($product['price'], 0, ',', '.') : ($product['price'] ?? 'Rp16.500.000') }}</div>
+                    <div class="price-current" id="detailPrice">{{ isset($product['price']) && is_numeric($product['price']) ? 'Rp. ' . number_format($product['price'], 0, ',', '.') : ($product['price'] ?? 'Rp16.500.000') }}</div>
                     <div style="font-size: 0.9rem; color: var(--gray); margin-top: 8px;">Stok Tersedia: <strong id="detailStock">{{ $product['stock'] ?? 15 }}</strong></div>
                 </div>
                 <div class="product-description">

@@ -747,7 +747,7 @@
 
                     <div class="form-group" style="margin-top: 24px; max-width: 300px;">
                         <label class="form-label">Harga <span class="req">*</span></label>
-                        <input type="text" id="productPriceInput" class="form-input" placeholder="0" value="{{ isset($product->price) ? number_format($product->price, 0, ',', '.') : '' }}" oninput="formatRupiahInput(this)">
+                        <input type="text" id="productPriceInput" class="form-input" placeholder="Rp. 0" value="{{ isset($product->price) ? 'Rp. ' . number_format($product->price, 0, ',', '.') : '' }}" oninput="formatRupiahInput(this)">
                     </div>
 
                     <div class="form-group" style="margin-top: 24px; max-width: 300px;">
@@ -779,7 +779,8 @@
         function formatRupiahInput(input) {
             let value = input.value.replace(/[^0-9]/g, '');
             if (value) {
-                input.value = new Intl.NumberFormat('id-ID').format(value);
+                let formatted = new Intl.NumberFormat('id-ID').format(value);
+                input.value = 'Rp. ' + formatted;
             } else {
                 input.value = '';
             }
