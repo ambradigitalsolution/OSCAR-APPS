@@ -424,7 +424,7 @@
                             @endif
                         </td>
                         <td>
-                            <div class="td-val">{{ number_format($product->stock) }}</div>
+                            <div class="td-val">{{ number_format($product->stock, 0, ',', '.') }}</div>
                         </td>
                         <td>
                             <div class="td-val">Rp{{ number_format($product->price, 0, ',', '.') }}</div>
@@ -472,7 +472,7 @@
                         </div>
                         <div class="m-card-stat">
                             <div class="label">Stok</div>
-                            <div class="value">{{ number_format($product->stock) }}</div>
+                            <div class="value">{{ number_format($product->stock, 0, ',', '.') }}</div>
                         </div>
                         <div class="m-card-stat">
                             <div class="label">Tayangan</div>
