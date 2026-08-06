@@ -903,8 +903,8 @@
                     
                     const img = document.createElement('img');
                     img.className = 'photo-preview';
-                    img.src = existingImages[i].startsWith('data:image') || existingImages[i].startsWith('http') ? existingImages[i] : '/' + existingImages[i].replace(/^\\//, '');
-                    img.alt = \`Foto \${i + 1}\`;
+                    img.src = existingImages[i].startsWith('data:image') || existingImages[i].startsWith('http') ? existingImages[i] : '/' + existingImages[i].replace(/^\//, '');
+                    img.alt = `Foto ${i + 1}`;
                     box.insertBefore(img, box.firstChild);
 
                     const plusIcon = box.querySelector('.plus-icon');
