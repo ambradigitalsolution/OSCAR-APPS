@@ -634,7 +634,6 @@
             <div class="page-title">Tambah Produk</div>
         </div>
         <div class="header-right">
-            <a href="javascript:void(0)" onclick="handleSave(true)" class="btn btn-outline-white">Simpan & Tambah Baru</a>
             <a href="javascript:void(0)" onclick="handleSave(false)" class="btn btn-white">Simpan</a>
         </div>
     </header>
