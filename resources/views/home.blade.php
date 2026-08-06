@@ -531,14 +531,16 @@
                 
                 <!-- Content Area -->
                 <div style="padding: 12px; display: flex; flex-direction: column; flex-grow: 1;">
-                    <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
-                        {{ $product->name }}
-                    </h3>
-                    
-                    <!-- Call to action -->
-                    <div style="margin-top: auto; padding-top: 12px;">
-                        <div style="width: 100%; text-align: center; padding: 8px 0; border: 1px solid #00AA5B; color: #00AA5B; background: transparent; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#00AA5B'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#00AA5B';">
-                            Lihat Produk
+                    <div style="margin-top: auto; display: flex; flex-direction: column;">
+                        <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
+                            {{ $product->name }}
+                        </h3>
+                        
+                        <!-- Call to action -->
+                        <div style="padding-top: 12px;">
+                            <div style="width: 100%; text-align: center; padding: 8px 0; border: 1px solid #00AA5B; color: #00AA5B; background: transparent; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#00AA5B'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#00AA5B';">
+                                Lihat Produk
+                            </div>
                         </div>
                     </div>
 
@@ -574,14 +576,16 @@
                 
                 <!-- Content Area -->
                 <div style="padding: 12px; display: flex; flex-direction: column; flex-grow: 1;">
-                    <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
-                        {{ $product->name }}
-                    </h3>
-                    
-                    <!-- Call to action -->
-                    <div style="margin-top: auto; padding-top: 12px;">
-                        <div style="width: 100%; text-align: center; padding: 8px 0; border: 1px solid #00AA5B; color: #00AA5B; background: transparent; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#00AA5B'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#00AA5B';">
-                            Lihat Produk
+                    <div style="margin-top: auto; display: flex; flex-direction: column;">
+                        <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
+                            {{ $product->name }}
+                        </h3>
+                        
+                        <!-- Call to action -->
+                        <div style="padding-top: 12px;">
+                            <div style="width: 100%; text-align: center; padding: 8px 0; border: 1px solid #00AA5B; color: #00AA5B; background: transparent; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#00AA5B'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#00AA5B';">
+                                Lihat Produk
+                            </div>
                         </div>
                     </div>
 
