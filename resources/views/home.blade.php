@@ -521,12 +521,12 @@
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
-                <div style="position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background-color: #f8fafc;">
+                <div style="position: relative; width: 100%; overflow: hidden; background-color: white;">
                     <!-- New Tag -->
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
 
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="width: 100%; height: auto; display: block;">
                 </div>
                 
                 <!-- Content Area -->
@@ -567,9 +567,9 @@
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
-                <div style="position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background-color: #f8fafc;">
+                <div style="position: relative; width: 100%; overflow: hidden; background-color: white;">
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" style="width: 100%; height: auto; display: block;">
                 </div>
                 
                 <!-- Content Area -->
