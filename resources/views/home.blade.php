@@ -526,7 +526,7 @@
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
 
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ asset($img) }}'); background-size: contain; background-position: center; background-repeat: no-repeat;" title="{{ $product->name }}"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ asset($img) }}'); background-size: cover; background-position: center; background-repeat: no-repeat;" title="{{ $product->name }}"></div>
                 </div>
                 
                 <!-- Content Area -->
@@ -569,7 +569,7 @@
                 <!-- Image Area -->
                 <div style="position: relative; width: 100%; padding-bottom: 100%; background-color: #f8fafc; overflow: hidden;">
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ asset($img) }}'); background-size: contain; background-position: center; background-repeat: no-repeat;" title="{{ $product->name }}"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ asset($img) }}'); background-size: cover; background-position: center; background-repeat: no-repeat;" title="{{ $product->name }}"></div>
                 </div>
                 
                 <!-- Content Area -->
