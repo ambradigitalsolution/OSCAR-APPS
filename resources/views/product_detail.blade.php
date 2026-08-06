@@ -116,19 +116,17 @@
         width: 100%;
         aspect-ratio: 1/1;
         border-radius: 16px;
-        background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+        background: #f1f5f9;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
     }
 
     .main-image-container img {
-        max-width: 95%;
-        max-height: 95%;
-        object-fit: contain;
-        filter: drop-shadow(0 20px 30px rgba(0,0,0,0.4));
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         transition: transform 0.3s ease;
     }
 
@@ -176,7 +174,7 @@
         flex: 0 0 calc(20% - 9.6px); /* Show exactly 5 items if gap is 12px */
         aspect-ratio: 1/1;
         border-radius: 12px;
-        background: #1e293b;
+        background: #f1f5f9;
         cursor: pointer;
         border: 2px solid transparent;
         display: flex;
@@ -188,9 +186,9 @@
     }
     
     .thumbnail-item img {
-        max-width: 80%;
-        max-height: 80%;
-        object-fit: contain;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         transition: transform 0.3s ease;
     }
     
