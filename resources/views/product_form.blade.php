@@ -747,7 +747,7 @@
 
                     <div class="form-group" style="margin-top: 24px; max-width: 300px;">
                         <label class="form-label">Harga <span class="req">*</span></label>
-                        <input type="number" id="productPriceInput" class="form-input" placeholder="0" value="{{ $product->price ?? '' }}">
+                        <input type="text" id="productPriceInput" class="form-input" placeholder="0" value="{{ isset($product->price) ? number_format($product->price, 0, ',', '.') : '' }}" oninput="formatRupiahInput(this)">
                     </div>
 
                     <div class="form-group" style="margin-top: 24px; max-width: 300px;">
@@ -776,6 +776,15 @@
     </div>
 
     <script>
+        function formatRupiahInput(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value) {
+                input.value = new Intl.NumberFormat('id-ID').format(value);
+            } else {
+                input.value = '';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             
             const catSelect = document.getElementById('productCategoryInput');
@@ -1154,7 +1163,7 @@
                 // Simpan produk ke localStorage
                 const productName = document.getElementById('productNameInput').value;
                 const productDesc = document.querySelector('.rt-area').innerHTML;
-                const productPriceRaw = document.getElementById('productPriceInput') ? document.getElementById('productPriceInput').value : 0;
+                const productPriceRaw = document.getElementById('productPriceInput') ? document.getElementById('productPriceInput').value.replace(/[^0-9]/g, '') : 0;
                 const productStockRaw = document.getElementById('productStockInput') ? document.getElementById('productStockInput').value : 0;
                 
                 // Get Category
