@@ -521,12 +521,12 @@
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
-                <div style="position: relative; width: 100%; padding-bottom: 100%; background-color: #f8fafc; overflow: hidden;">
+                <div style="position: relative; width: 100%; padding-bottom: 75%; background-color: #f8fafc; overflow: hidden;">
                     <!-- New Tag -->
                     <div style="position: absolute; top: 0; right: 0; background-color: #0ea5e9; color: white; font-weight: 700; font-size: 0.7rem; padding: 4px 8px; border-bottom-left-radius: 8px; z-index: 2;">BARU</div>
 
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; background-image: url('{{ asset($img) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 4px;" title="{{ $product->name }}"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ asset($img) }}'); background-size: cover; background-position: center; background-repeat: no-repeat;" title="{{ $product->name }}"></div>
                 </div>
                 
                 <!-- Content Area -->
@@ -567,9 +567,9 @@
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
-                <div style="position: relative; width: 100%; padding-bottom: 100%; background-color: #f8fafc; overflow: hidden;">
+                <div style="position: relative; width: 100%; padding-bottom: 75%; background-color: #f8fafc; overflow: hidden;">
                     @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                    <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; background-image: url('{{ asset($img) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 4px;" title="{{ $product->name }}"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ asset($img) }}'); background-size: cover; background-position: center; background-repeat: no-repeat;" title="{{ $product->name }}"></div>
                 </div>
                 
                 <!-- Content Area -->
