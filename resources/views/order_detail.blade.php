@@ -308,6 +308,30 @@
         }
         .btn-outline:hover { background: #f8f9fa; }
 
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .status-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .select-status {
+            padding: 10px 14px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-family: inherit;
+            outline: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-save-status {
+            padding: 10px 16px;
+        }
+
         @media (max-width: 1024px) {
             .detail-grid {
                 grid-template-columns: 1fr;
@@ -318,6 +342,47 @@
             .search-bar { display: none; }
             .content-scroll { padding: 16px; }
             .card { padding: 16px; }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
+            }
+            .action-buttons .btn-outline {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .status-form {
+                flex-direction: column;
+                width: 100%;
+            }
+            .status-form select, .status-form button {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .page-title {
+                font-size: 1.25rem;
+                word-break: break-word;
+            }
+            .order-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .product-cell {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .product-img {
+                width: 100%;
+                height: auto;
+                max-width: 120px;
+            }
         }
     </style>
 </head>
@@ -389,11 +454,11 @@
                         <span>Dibuat pada {{ $order->created_at->format('d M Y, H:i') }}</span>
                     </div>
                 </div>
-                <div style="display:flex; gap:12px;">
+                <div class="action-buttons">
                     <a href="/orders?role={{ $role }}" class="btn btn-outline">Kembali</a>
                     
                     @if($role == 'owner')
-                    <form action="/orders/{{ $order->id }}/status" method="POST" style="display:flex; gap:8px;">
+                    <form action="/orders/{{ $order->id }}/status" method="POST" class="status-form">
                         @csrf
                         @php
                             $statusRanks = ['Pengajuan Baru' => 1, 'Dikonfirmasi' => 2, 'Dalam Pengiriman' => 3, 'Selesai' => 4, 'Ditolak' => 4];
@@ -407,7 +472,7 @@
                                 'Ditolak' => 'badge-cancel'
                             ];
                         @endphp
-                        <select name="status" class="option-select {{ $badgeClass }}" style="padding:10px 14px; border:1px solid transparent; border-radius:8px; font-family:inherit; outline:none; font-weight:700; cursor:pointer;" onchange="updateSelectColor(this)">
+                        <select name="status" class="select-status option-select {{ $badgeClass }}" onchange="updateSelectColor(this)">
                             @foreach($statusOptions as $val => $class)
                                 @php
                                     $optRank = $statusRanks[$val];
@@ -420,7 +485,7 @@
                                 @endif
                             @endforeach
                         </select>
-                        <button type="submit" class="btn btn-primary" style="padding:10px 16px;">Simpan Status</button>
+                        <button type="submit" class="btn btn-primary btn-save-status">Simpan Status</button>
                     </form>
                     @endif
                 </div>
