@@ -332,25 +332,6 @@
             padding: 10px 16px;
         }
 
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: white;
-            border: 1px solid var(--tk-border);
-            color: var(--tk-text-primary);
-            text-decoration: none;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        .btn-back:hover {
-            background: #f8f9fa;
-            color: var(--tk-green);
-        }
-
         @media (max-width: 1024px) {
             .detail-grid {
                 grid-template-columns: 1fr;
@@ -455,14 +436,16 @@
                 <span>Detail</span>
             </div>
             
+            <div style="margin-bottom: 16px;">
+                <a href="/orders?role={{ $role }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 0.9rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    Kembali
+                </a>
+            </div>
+            
             <div class="page-header">
                 <div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                        <a href="/orders?role={{ $role }}" class="btn-back" title="Kembali">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                        </a>
-                        <h1 class="page-title" style="margin: 0;">Detail Pengajuan: {{ $order->order_id }}</h1>
-                    </div>
+                    <h1 class="page-title">Detail Pengajuan: {{ $order->order_id }}</h1>
                     <div class="order-meta">
                         @php
                             $badgeClass = match($order->status) {
