@@ -566,7 +566,7 @@
         </div>
         
                         <div class="expandable-grid product-grid">
-            @foreach(collect($products) as $product)
+            @foreach(collect($products)->skip(12) as $product)
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
