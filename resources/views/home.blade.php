@@ -535,9 +535,10 @@
                         <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
                             {{ $product->name }}
                         </h3>
+                        <p style="font-size: 0.95rem; font-weight: 700; color: #00AA5B; margin: 0 0 4px 0;">Rp {{ number_format($product->price ?? 0, 0, ',', '.') }}</p>
                         
                         <!-- Call to action -->
-                        <div style="padding-top: 12px;">
+                        <div style="padding-top: 8px;">
                             <div style="width: 100%; text-align: center; padding: 8px 0; border: 1px solid #00AA5B; color: #00AA5B; background: transparent; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#00AA5B'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#00AA5B';">
                                 Lihat Produk
                             </div>
@@ -565,7 +566,7 @@
         </div>
         
                         <div class="expandable-grid product-grid">
-            @foreach(collect($products)->skip(12)->take(36) as $product)
+            @foreach(collect($products) as $product)
             <div class="card-item" onclick="window.location.href='/product/detail?id={{ $product->id ?? 1 }}&role={{ $role }}'" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white; transition: box-shadow 0.2s; position: relative; display: flex; flex-direction: column; overflow: hidden; font-family: 'Inter', sans-serif; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
                 
                 <!-- Image Area -->
@@ -580,9 +581,10 @@
                         <h3 style="font-size: 0.8rem; font-weight: 500; color: #334155; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 35px;">
                             {{ $product->name }}
                         </h3>
+                        <p style="font-size: 0.95rem; font-weight: 700; color: #00AA5B; margin: 0 0 4px 0;">Rp {{ number_format($product->price ?? 0, 0, ',', '.') }}</p>
                         
                         <!-- Call to action -->
-                        <div style="padding-top: 12px;">
+                        <div style="padding-top: 8px;">
                             <div style="width: 100%; text-align: center; padding: 8px 0; border: 1px solid #00AA5B; color: #00AA5B; background: transparent; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#00AA5B'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#00AA5B';">
                                 Lihat Produk
                             </div>
