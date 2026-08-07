@@ -276,13 +276,13 @@
                         <a href="#inventory" style="text-decoration: none;">
                             <div class="banner-slide" style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);">
                                 <div class="banner-content">
-                                    <span class="banner-badge" style="background: #4f46e5; color: white;">SYSTEM UPDATE</span>
+                                    <span class="banner-badge" style="background: #4f46e5; color: white;">{{ $banners['slide_1']->badge ?? 'SYSTEM UPDATE' }}</span>
                                     <h2 class="banner-title">
-                                        ERP Dashboard <br><span style="color: #4f46e5;">Versi 2.0</span>
+                                        {{ $banners['slide_1']->title_1 ?? 'ERP Dashboard' }} <br><span style="color: #4f46e5;">{{ $banners['slide_1']->title_2 ?? 'Versi 2.0' }}</span>
                                     </h2>
-                                    <p class="banner-subtitle">Pembaruan sistem manajemen inventaris terpadu untuk efisiensi operasional.</p>
+                                    <p class="banner-subtitle">{{ $banners['slide_1']->description ?? 'Pembaruan sistem manajemen inventaris terpadu untuk efisiensi operasional.' }}</p>
                                 </div>
-                                <img src="{{ asset('assets/server.png') }}" alt="ERP System" class="banner-image">
+                                <img src="{{ isset($banners['slide_1']->image) ? asset($banners['slide_1']->image) : asset('assets/server.png') }}" alt="ERP System" class="banner-image">
                             </div>
                         </a>
                     </div>
@@ -292,13 +292,13 @@
                         <a href="#assets" style="text-decoration: none;">
                             <div class="banner-slide" style="background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);">
                                 <div class="banner-content">
-                                    <span class="banner-badge" style="background: #16a34a; color: white;">MANAJEMEN ASET</span>
+                                    <span class="banner-badge" style="background: #16a34a; color: white;">{{ $banners['slide_2']->badge ?? 'MANAJEMEN ASET' }}</span>
                                     <h2 class="banner-title">
-                                        Kontrol Penuh <br><span style="color: #16a34a;">Semua Gudang</span>
+                                        {{ $banners['slide_2']->title_1 ?? 'Kontrol Penuh Semua Gudang' }}
                                     </h2>
-                                    <p class="banner-subtitle">Pantau ketersediaan stok barang dan status pengiriman secara real-time.</p>
+                                    <p class="banner-subtitle">{{ $banners['slide_2']->description ?? 'Pantau ketersediaan stok barang dan status pengiriman secara real-time.' }}</p>
                                 </div>
-                                <img src="{{ asset('assets/pc.png') }}" alt="Manajemen Gudang" class="banner-image">
+                                <img src="{{ isset($banners['slide_2']->image) ? asset($banners['slide_2']->image) : asset('assets/pc.png') }}" alt="Manajemen Gudang" class="banner-image">
                             </div>
                         </a>
                     </div>
@@ -319,11 +319,11 @@
             <a href="#alert" class="bento-link">
                 <div class="bento-box bento-box-blue">
                     <div class="bento-side-content">
-                        <span class="bento-tag" style="background: #ef4444;">ALERT</span>
-                        <h3>Stok<br>Menipis</h3>
-                        <p>12 Barang butuh restock</p>
+                        <span class="bento-tag" style="background: #ef4444;">{{ $banners['side_top']->badge ?? 'ALERT' }}</span>
+                        <h3>{{ $banners['side_top']->title_1 ?? 'Stok' }}<br>{{ $banners['side_top']->title_2 ?? 'Menipis' }}</h3>
+                        <p>{{ $banners['side_top']->description ?? '12 Barang butuh restock' }}</p>
                     </div>
-                    <img src="{{ asset('assets/laptop.png') }}" alt="Stok Alert" class="bento-side-img">
+                    <img src="{{ isset($banners['side_top']->image) ? asset($banners['side_top']->image) : asset('assets/laptop.png') }}" alt="Stok Alert" class="bento-side-img">
                 </div>
             </a>
         </div>
@@ -333,11 +333,11 @@
             <a href="#reports" class="bento-link">
                 <div class="bento-box bento-box-dark">
                     <div class="bento-side-content">
-                        <span class="bento-tag" style="background: #10b981;">REPORT</span>
-                        <h3>Laporan<br>Bulanan</h3>
-                        <p>Status: <strong>Selesai</strong></p>
+                        <span class="bento-tag" style="background: #10b981;">{{ $banners['side_bottom']->badge ?? 'REPORT' }}</span>
+                        <h3>{{ $banners['side_bottom']->title_1 ?? 'Laporan' }}<br>{{ $banners['side_bottom']->title_2 ?? 'Bulanan' }}</h3>
+                        <p>{{ $banners['side_bottom']->description ?? 'Status: Selesai' }}</p>
                     </div>
-                    <img src="{{ asset('assets/infokus.png') }}" alt="Laporan" class="bento-side-img bento-img-center">
+                    <img src="{{ isset($banners['side_bottom']->image) ? asset($banners['side_bottom']->image) : asset('assets/infokus.png') }}" alt="Laporan" class="bento-side-img bento-img-center">
                 </div>
             </a>
         </div>

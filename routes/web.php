@@ -138,7 +138,8 @@ Route::get('/dashboard', function () {
 
     // $testimonials removed for ERP context
 
-    return view('home', compact('categories', 'products', 'features', 'steps', 'role'));
+    $banners = \App\Models\Banner::all()->keyBy('placement');
+    return view('home', compact('categories', 'products', 'features', 'steps', 'role', 'banners'));
 });
 
 // Duplicate routes removed for /seller and /product/form
