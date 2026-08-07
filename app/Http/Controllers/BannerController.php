@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class BannerController extends Controller
 {
@@ -34,9 +35,16 @@ class BannerController extends Controller
                 'description' => $fields['description'] ?? null,
             ];
 
-            if ($request->hasFile("banners.{$placement}.image")) {
+            if (!empty($fields['delete_image'])) {
+                $bannerData['image'] = null;
+            } elseif ($request->hasFile("banners.{$placement}.image")) {
                 $image = $request->file("banners.{$placement}.image");
                 $imageName = time() . '_' . $placement . '.' . $image->getClientOriginalExtension();
+                
+                if (!File::exists(public_path('assets/banners'))) {
+                    File::makeDirectory(public_path('assets/banners'), 0755, true);
+                }
+                
                 $image->move(public_path('assets/banners'), $imageName);
                 $bannerData['image'] = 'assets/banners/' . $imageName;
             }

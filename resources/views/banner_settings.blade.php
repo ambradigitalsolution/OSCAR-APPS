@@ -293,8 +293,13 @@
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 800 x 600px.</div>
                         <div class="photo-box">
-                            <img src="{{ isset($banners['slide_1']->image) ? asset($banners['slide_1']->image) : asset('assets/server.png') }}" alt="Preview">
-                            <input type="file" name="banners[slide_1][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
+                            <img id="preview-slide_1" src="{{ isset($banners['slide_1']->image) ? asset($banners['slide_1']->image) : asset('assets/server.png') }}" alt="Preview">
+                            <div class="photo-actions" style="position:absolute; bottom:10px; display:flex; gap:8px; z-index:10;">
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; border:1px solid var(--tk-border);" onclick="document.getElementById('img-input-slide_1').click()">Pilih Gambar</button>
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; color:var(--tk-danger); border:1px solid var(--tk-border);" onclick="deleteImage('slide_1', '{{ asset('assets/server.png') }}')">Hapus Gambar</button>
+                            </div>
+                            <input type="file" id="img-input-slide_1" name="banners[slide_1][image]" accept="image/*" style="display:none;" onchange="previewImage(this, 'slide_1')">
+                            <input type="hidden" id="delete-input-slide_1" name="banners[slide_1][delete_image]" value="0">
                         </div>
                     </div>
 
@@ -317,8 +322,13 @@
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 800 x 600px.</div>
                         <div class="photo-box">
-                            <img src="{{ isset($banners['slide_2']->image) ? asset($banners['slide_2']->image) : asset('assets/pc.png') }}" alt="Preview" style="background:#bbf7d0;">
-                            <input type="file" name="banners[slide_2][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
+                            <img id="preview-slide_2" src="{{ isset($banners['slide_2']->image) ? asset($banners['slide_2']->image) : asset('assets/pc.png') }}" alt="Preview" style="background:#bbf7d0;">
+                            <div class="photo-actions" style="position:absolute; bottom:10px; display:flex; gap:8px; z-index:10;">
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; border:1px solid var(--tk-border);" onclick="document.getElementById('img-input-slide_2').click()">Pilih Gambar</button>
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; color:var(--tk-danger); border:1px solid var(--tk-border);" onclick="deleteImage('slide_2', '{{ asset('assets/pc.png') }}')">Hapus Gambar</button>
+                            </div>
+                            <input type="file" id="img-input-slide_2" name="banners[slide_2][image]" accept="image/*" style="display:none;" onchange="previewImage(this, 'slide_2')">
+                            <input type="hidden" id="delete-input-slide_2" name="banners[slide_2][delete_image]" value="0">
                         </div>
                     </div>
                 </div>
@@ -348,8 +358,13 @@
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 400 x 300px.</div>
                         <div class="photo-box" style="height: 150px;">
-                            <img src="{{ isset($banners['side_top']->image) ? asset($banners['side_top']->image) : asset('assets/laptop.png') }}" alt="Preview" style="background:#e0f2fe; object-position: right bottom;">
-                            <input type="file" name="banners[side_top][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
+                            <img id="preview-side_top" src="{{ isset($banners['side_top']->image) ? asset($banners['side_top']->image) : asset('assets/laptop.png') }}" alt="Preview" style="background:#e0f2fe; object-position: right bottom;">
+                            <div class="photo-actions" style="position:absolute; bottom:10px; display:flex; gap:8px; z-index:10;">
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; border:1px solid var(--tk-border);" onclick="document.getElementById('img-input-side_top').click()">Pilih Gambar</button>
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; color:var(--tk-danger); border:1px solid var(--tk-border);" onclick="deleteImage('side_top', '{{ asset('assets/laptop.png') }}')">Hapus</button>
+                            </div>
+                            <input type="file" id="img-input-side_top" name="banners[side_top][image]" accept="image/*" style="display:none;" onchange="previewImage(this, 'side_top')">
+                            <input type="hidden" id="delete-input-side_top" name="banners[side_top][delete_image]" value="0">
                         </div>
                     </div>
                 </div>
@@ -379,8 +394,13 @@
                         <label class="form-label">Gambar Banner</label>
                         <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Disarankan ukuran 400 x 300px.</div>
                         <div class="photo-box" style="height: 150px;">
-                            <img src="{{ isset($banners['side_bottom']->image) ? asset($banners['side_bottom']->image) : asset('assets/infokus.png') }}" alt="Preview" style="background:#0f172a; object-position: right bottom;">
-                            <input type="file" name="banners[side_bottom][image]" style="position:absolute; bottom:10px; left:10px; z-index:10; background:white; padding:4px; border-radius:4px; font-size:11px; max-width:90%;">
+                            <img id="preview-side_bottom" src="{{ isset($banners['side_bottom']->image) ? asset($banners['side_bottom']->image) : asset('assets/infokus.png') }}" alt="Preview" style="background:#0f172a; object-position: right bottom;">
+                            <div class="photo-actions" style="position:absolute; bottom:10px; display:flex; gap:8px; z-index:10;">
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; border:1px solid var(--tk-border);" onclick="document.getElementById('img-input-side_bottom').click()">Pilih Gambar</button>
+                                <button type="button" class="btn btn-white" style="padding:4px 8px; font-size:12px; color:var(--tk-danger); border:1px solid var(--tk-border);" onclick="deleteImage('side_bottom', '{{ asset('assets/infokus.png') }}')">Hapus</button>
+                            </div>
+                            <input type="file" id="img-input-side_bottom" name="banners[side_bottom][image]" accept="image/*" style="display:none;" onchange="previewImage(this, 'side_bottom')">
+                            <input type="hidden" id="delete-input-side_bottom" name="banners[side_bottom][delete_image]" value="0">
                         </div>
                     </div>
                 </div>
@@ -391,8 +411,21 @@
     </div>
 
     <script>
-        // Form now handles file uploads natively. 
-        // Photo box interactions removed to prevent conflicts with native file input click.
+        function previewImage(input, placement) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-' + placement).src = e.target.result;
+                    document.getElementById('delete-input-' + placement).value = '0';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function deleteImage(placement, defaultSrc) {
+            document.getElementById('preview-' + placement).src = defaultSrc;
+            document.getElementById('img-input-' + placement).value = '';
+            document.getElementById('delete-input-' + placement).value = '1';
+        }
     </script>
 </body>
 </html>
