@@ -363,7 +363,7 @@
             <div class="tbl-tabs" id="status-tabs">
                 <div class="tbl-tab active" data-target="semua">Semua</div>
                 <div class="tbl-tab" data-target="aktif">Aktif <span class="cnt">{{ collect($products)->where('status','Aktif')->count() }}</span></div>
-                <div class="tbl-tab" data-target="nonaktif">Nonaktif <span class="cnt">{{ collect($products)->where('status','Nonaktif')->count() }}</span></div>
+                <div class="tbl-tab" data-target="nonaktif">Nonaktif <span class="cnt">{{ collect($products)->where('status','!=','Aktif')->count() }}</span></div>
             </div>
 
             <!-- Filters -->
@@ -391,7 +391,7 @@
                 </thead>
                 <tbody>
                     @foreach($products as $product)
-                    <tr class="product-row" data-status="{{ strtolower($product->status ?? '') }}" data-search="{{ strtolower($product->name . ' ' . ($product->etalase ?? '')) }}">
+                    <tr class="product-row" data-status="{{ $product->status == 'Aktif' ? 'aktif' : 'nonaktif' }}" data-search="{{ strtolower($product->name . ' ' . ($product->etalase ?? '')) }}">
                         <td><input type="checkbox" class="cb"></td>
                         <td>
                             <div class="p-cell">
@@ -457,7 +457,7 @@
             <div class="mobile-cards">
                 @foreach($products as $product)
                 @php $img = is_array($product->images) && count($product->images) > 0 ? $product->images[0] : 'https://placehold.co/150'; @endphp
-                <div class="m-card product-row" data-status="{{ strtolower($product->status ?? '') }}" data-search="{{ strtolower($product->name . ' ' . ($product->etalase ?? '')) }}">
+                <div class="m-card product-row" data-status="{{ $product->status == 'Aktif' ? 'aktif' : 'nonaktif' }}" data-search="{{ strtolower($product->name . ' ' . ($product->etalase ?? '')) }}">
                     <div class="m-card-top">
                         <img src="{{ asset($img) }}" class="m-card-img" alt="{{ $product->name }}" style="object-fit:cover;">
                         <div class="m-card-info">
