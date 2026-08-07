@@ -485,7 +485,7 @@
                 <div style="position: relative;">
                     <a href="#kategori-{{ strtolower($category->name) }}" class="category-card">
                         <div class="category-img-wrapper" style="background-color: {{ $category->bg ?? 'rgba(0, 176, 80, 0.08)' }}">
-                            <img src="{{ asset($category->icon ?? 'assets/earphone.png') }}" alt="{{ $category->name }}">
+                            <img src="{{ asset($category->icon ?? 'assets/default_category.png') }}" alt="{{ $category->name }}">
                         </div>
                         <h3 class="category-name">{{ $category->name }}</h3>
                         <p class="category-count">{{ $category->count }} Unit</p>
