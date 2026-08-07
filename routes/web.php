@@ -39,6 +39,22 @@ Route::get('/dashboard', function () {
     $role = request()->query('role', 'member'); // Default to member
 
     $categories = \App\Models\Category::all();
+    
+    if ($categories->isEmpty()) {
+        $defaultCategories = [
+            ['name' => 'Elektronik', 'count' => 125, 'icon' => 'assets/earphone.png', 'bg' => 'rgba(0, 176, 80, 0.08)'],
+            ['name' => 'Gadget', 'count' => 182, 'icon' => 'assets/hp.png', 'bg' => 'rgba(0, 176, 80, 0.08)'],
+            ['name' => 'Server', 'count' => 87, 'icon' => 'assets/server.png', 'bg' => 'rgba(0, 176, 80, 0.08)'],
+            ['name' => 'Proyektor', 'count' => 31, 'icon' => 'assets/infokus.png', 'bg' => 'rgba(0, 176, 80, 0.08)'],
+            ['name' => 'Laptop', 'count' => 65, 'icon' => 'assets/laptop.png', 'bg' => 'rgba(0, 176, 80, 0.08)'],
+            ['name' => 'Kamera', 'count' => 29, 'icon' => 'assets/camera.png', 'bg' => 'rgba(0, 176, 80, 0.08)'],
+            ['name' => 'Komputer PC', 'count' => 48, 'icon' => 'assets/pc.png', 'bg' => 'rgba(0, 176, 80, 0.08)'],
+        ];
+        foreach ($defaultCategories as $cat) {
+            \App\Models\Category::create($cat);
+        }
+        $categories = \App\Models\Category::all();
+    }
 
     $products = Product::orderBy('created_at', 'desc')->get();
 
