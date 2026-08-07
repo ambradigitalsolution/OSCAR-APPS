@@ -372,12 +372,17 @@
                 gap: 8px;
             }
             .status-form {
-                flex-direction: column;
+                flex-direction: row;
                 width: 100%;
+                gap: 8px;
             }
-            .status-form select, .status-form button {
-                width: 100%;
-                box-sizing: border-box;
+            .status-form select {
+                flex: 1;
+                width: auto;
+            }
+            .status-form button {
+                width: auto;
+                flex-shrink: 0;
             }
             .page-title {
                 font-size: 1rem;
