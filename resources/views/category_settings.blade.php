@@ -112,11 +112,11 @@
                                     <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Ukuran direkomendasikan 64 x 64px.</div>
                                     <div style="display: flex; gap: 12px; align-items: flex-end;">
                                         <div class="photo-box" style="width: 80px; height: 80px; position: relative;">
-                                            <img id="preview-cat-{{ $index }}" src="{{ asset($cat->icon ?? 'assets/default_category.png') }}" alt="Preview" style="padding: 15px; background: {{ $cat->bg ?? 'rgba(0, 176, 80, 0.08)' }};">
+                                            <img id="preview-cat-{{ $index }}" src="{{ asset($cat->icon ?? 'assets/earphone.png') }}" alt="Preview" style="padding: 15px; background: {{ $cat->bg ?? 'rgba(0, 176, 80, 0.08)' }};">
                                         </div>
                                         <div style="display: flex; flex-direction: column; gap: 8px;">
                                             <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; border: 1px solid var(--tk-border);" onclick="document.getElementById('img-input-cat-{{ $index }}').click()">Pilih Icon</button>
-                                            <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; color: var(--tk-danger); border: 1px solid var(--tk-border);" onclick="deleteImage('cat-{{ $index }}', '{{ asset('assets/default_category.png') }}')">Hapus Icon</button>
+                                            <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; color: var(--tk-danger); border: 1px solid var(--tk-border);" onclick="deleteImage('cat-{{ $index }}', '{{ asset('assets/earphone.png') }}')">Hapus Icon</button>
                                         </div>
                                     </div>
                                     <input type="file" id="img-input-cat-{{ $index }}" name="categories[{{ $index }}][icon]" accept="image/*" style="display:none;" onchange="previewImage(this, 'cat-{{ $index }}')">
@@ -147,11 +147,11 @@
                                     <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Ukuran direkomendasikan 64 x 64px.</div>
                                     <div style="display: flex; gap: 12px; align-items: flex-end;">
                                         <div class="photo-box" style="width: 80px; height: 80px; position: relative;">
-                                            <img id="preview-cat-0" src="{{ asset('assets/default_category.png') }}" alt="Preview" style="padding: 15px; background: rgba(0, 176, 80, 0.08);">
+                                            <img id="preview-cat-0" src="{{ asset('assets/earphone.png') }}" alt="Preview" style="padding: 15px; background: rgba(0, 176, 80, 0.08);">
                                         </div>
                                         <div style="display: flex; flex-direction: column; gap: 8px;">
                                             <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; border: 1px solid var(--tk-border);" onclick="document.getElementById('img-input-cat-0').click()">Pilih Icon</button>
-                                            <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; color: var(--tk-danger); border: 1px solid var(--tk-border);" onclick="deleteImage('cat-0', '{{ asset('assets/default_category.png') }}')">Hapus Icon</button>
+                                            <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; color: var(--tk-danger); border: 1px solid var(--tk-border);" onclick="deleteImage('cat-0', '{{ asset('assets/earphone.png') }}')">Hapus Icon</button>
                                         </div>
                                     </div>
                                     <input type="file" id="img-input-cat-0" name="categories[0][icon]" accept="image/*" style="display:none;" onchange="previewImage(this, 'cat-0')">
@@ -218,11 +218,11 @@
                                 <div class="form-hint" style="margin-bottom:12px;">Format gambar .png transparan. Ukuran direkomendasikan 64 x 64px.</div>
                                 <div style="display: flex; gap: 12px; align-items: flex-end;">
                                     <div class="photo-box" style="width: 80px; height: 80px; position: relative;">
-                                        <img id="preview-cat-${nextIndex}" src="{{ asset('assets/default_category.png') }}" alt="Preview" style="padding: 15px; background: rgba(0, 176, 80, 0.08);">
+                                        <img id="preview-cat-${nextIndex}" src="{{ asset('assets/earphone.png') }}" alt="Preview" style="padding: 15px; background: rgba(0, 176, 80, 0.08);">
                                     </div>
                                     <div style="display: flex; flex-direction: column; gap: 8px;">
                                         <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; border: 1px solid var(--tk-border);" onclick="document.getElementById('img-input-cat-${nextIndex}').click()">Pilih Icon</button>
-                                        <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; color: var(--tk-danger); border: 1px solid var(--tk-border);" onclick="deleteImage('cat-${nextIndex}', '{{ asset('assets/default_category.png') }}')">Hapus Icon</button>
+                                        <button type="button" class="btn btn-white" style="padding: 6px 12px; font-size: 12px; color: var(--tk-danger); border: 1px solid var(--tk-border);" onclick="deleteImage('cat-${nextIndex}', '{{ asset('assets/earphone.png') }}')">Hapus Icon</button>
                                     </div>
                                 </div>
                                 <input type="file" id="img-input-cat-${nextIndex}" name="categories[${nextIndex}][icon]" accept="image/*" style="display:none;" onchange="previewImage(this, 'cat-${nextIndex}')">
