@@ -38,9 +38,16 @@ class CategoryController extends Controller
                 $category = Category::find($data['id']);
                 if ($category) {
                     // Update existing
-                    if ($request->hasFile("categories.{$index}.icon")) {
+                    if (!empty($data['delete_image'])) {
+                        $categoryData['icon'] = null;
+                    } elseif ($request->hasFile("categories.{$index}.icon")) {
                         $icon = $request->file("categories.{$index}.icon");
                         $iconName = time() . '_' . $index . '.' . $icon->getClientOriginalExtension();
+                        
+                        if (!File::exists(public_path('assets/categories'))) {
+                            File::makeDirectory(public_path('assets/categories'), 0755, true);
+                        }
+                        
                         $icon->move(public_path('assets/categories'), $iconName);
                         $categoryData['icon'] = 'assets/categories/' . $iconName;
                     }
@@ -52,6 +59,11 @@ class CategoryController extends Controller
                 if ($request->hasFile("categories.{$index}.icon")) {
                     $icon = $request->file("categories.{$index}.icon");
                     $iconName = time() . '_' . $index . '.' . $icon->getClientOriginalExtension();
+                    
+                    if (!File::exists(public_path('assets/categories'))) {
+                        File::makeDirectory(public_path('assets/categories'), 0755, true);
+                    }
+                    
                     $icon->move(public_path('assets/categories'), $iconName);
                     $categoryData['icon'] = 'assets/categories/' . $iconName;
                 }
