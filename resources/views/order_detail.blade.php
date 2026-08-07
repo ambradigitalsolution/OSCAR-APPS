@@ -172,8 +172,8 @@
         }
         
         .page-title {
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--tk-text-primary);
             margin: 0 0 8px 0;
         }
@@ -380,7 +380,7 @@
                 box-sizing: border-box;
             }
             .page-title {
-                font-size: 1.25rem;
+                font-size: 1rem;
                 word-break: break-word;
             }
             .order-meta {
