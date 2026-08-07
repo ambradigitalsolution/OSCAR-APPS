@@ -38,50 +38,7 @@ Route::get('/register', function () {
 Route::get('/dashboard', function () {
     $role = request()->query('role', 'member'); // Default to member
 
-    $categories = [
-        [
-            'name' => 'Elektronik',
-            'count' => '125 Unit',
-            'icon' => 'assets/earphone.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-        [
-            'name' => 'Gadget',
-            'count' => '182 Unit',
-            'icon' => 'assets/hp.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-        [
-            'name' => 'Server',
-            'count' => '87 Unit',
-            'icon' => 'assets/server.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-        [
-            'name' => 'Proyektor',
-            'count' => '31 Unit',
-            'icon' => 'assets/infokus.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-        [
-            'name' => 'Laptop',
-            'count' => '65 Unit',
-            'icon' => 'assets/laptop.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-        [
-            'name' => 'Kamera',
-            'count' => '29 Unit',
-            'icon' => 'assets/camera.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-        [
-            'name' => 'Komputer PC',
-            'count' => '48 Unit',
-            'icon' => 'assets/pc.png',
-            'bg' => 'rgba(0, 176, 80, 0.08)'
-        ],
-    ];
+    $categories = \App\Models\Category::all();
 
     $products = Product::orderBy('created_at', 'desc')->get();
 

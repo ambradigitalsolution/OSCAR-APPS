@@ -483,12 +483,12 @@
             <div class="categories-grid categories-grid-scroll">
             @foreach($categories as $category)
                 <div style="position: relative;">
-                    <a href="#kategori-{{ strtolower($category['name']) }}" class="category-card">
-                        <div class="category-img-wrapper" style="background-color: {{ $category['bg'] }}">
-                            <img src="{{ asset($category['icon']) }}" alt="{{ $category['name'] }}">
+                    <a href="#kategori-{{ strtolower($category->name) }}" class="category-card">
+                        <div class="category-img-wrapper" style="background-color: {{ $category->bg ?? 'rgba(0, 176, 80, 0.08)' }}">
+                            <img src="{{ asset($category->icon ?? 'assets/placeholder.png') }}" alt="{{ $category->name }}">
                         </div>
-                        <h3 class="category-name">{{ $category['name'] }}</h3>
-                        <p class="category-count">{{ $category['count'] }}</p>
+                        <h3 class="category-name">{{ $category->name }}</h3>
+                        <p class="category-count">{{ $category->count }} Unit</p>
                     </a>
                 </div>
             @endforeach
