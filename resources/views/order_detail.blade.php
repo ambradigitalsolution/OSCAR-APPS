@@ -332,6 +332,25 @@
             padding: 10px 16px;
         }
 
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid var(--tk-border);
+            color: var(--tk-text-primary);
+            text-decoration: none;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-back:hover {
+            background: #f8f9fa;
+            color: var(--tk-green);
+        }
+
         @media (max-width: 1024px) {
             .detail-grid {
                 grid-template-columns: 1fr;
@@ -351,10 +370,6 @@
                 flex-direction: column;
                 width: 100%;
                 gap: 8px;
-            }
-            .action-buttons .btn-outline {
-                width: 100%;
-                box-sizing: border-box;
             }
             .status-form {
                 flex-direction: column;
@@ -438,7 +453,12 @@
             
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">Detail Pengajuan: {{ $order->order_id }}</h1>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <a href="/orders?role={{ $role }}" class="btn-back" title="Kembali">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                        </a>
+                        <h1 class="page-title" style="margin: 0;">Detail Pengajuan: {{ $order->order_id }}</h1>
+                    </div>
                     <div class="order-meta">
                         @php
                             $badgeClass = match($order->status) {
@@ -455,8 +475,6 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <a href="/orders?role={{ $role }}" class="btn btn-outline">Kembali</a>
-                    
                     @if($role == 'owner')
                     <form action="/orders/{{ $order->id }}/status" method="POST" class="status-form">
                         @csrf
