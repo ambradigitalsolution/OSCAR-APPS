@@ -1487,6 +1487,34 @@
                     }
                 }
 
+                // --- VALIDASI FRONTEND ---
+                let missingFields = [];
+                
+                if (allImagePaths.length === 0) missingFields.push("Foto Produk");
+                if (!productName.trim()) missingFields.push("Nama Produk");
+                if (!finalCategory || (finalCategory === 'new' && !document.getElementById('newCategoryInput').value.trim())) missingFields.push("Kategori");
+                
+                // Cek deskripsi kosong (menghapus tag html untuk memastikan benar-benar ada teks)
+                let tempDiv = document.createElement("div");
+                tempDiv.innerHTML = productDesc;
+                let plainTextDesc = tempDiv.textContent || tempDiv.innerText || "";
+                if (!plainTextDesc.trim()) missingFields.push("Deskripsi");
+
+                if (!productPriceRaw || productPriceRaw == 0) missingFields.push("Harga");
+                if (productStockRaw === "") missingFields.push("Stok"); // Stok bisa 0
+
+                if (missingFields.length > 0) {
+                    Swal.fire({
+                        title: 'Data Belum Lengkap!',
+                        html: `Mohon isi kolom yang bertanda bintang (*).<br><br><span style="color:#EF144A;font-weight:bold;">Yang masih kosong:</span><br>${missingFields.join(', ')}`,
+                        icon: 'warning',
+                        confirmButtonColor: '#FF9800'
+                    });
+                    resetButtons();
+                    return; // Stop proses simpan
+                }
+                // --- END VALIDASI FRONTEND ---
+
                 const newProduct = {
                     _token: CSRF_TOKEN,
                     id: '{{ $product->id ?? '' }}',
@@ -1504,6 +1532,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json', // Minta balasan berupa JSON agar tidak error parsing HTML
                     },
                     body: JSON.stringify(newProduct)
                 })
