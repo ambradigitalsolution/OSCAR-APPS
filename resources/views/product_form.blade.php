@@ -1118,6 +1118,9 @@
                         const response = await fetch(UPLOAD_URL, {
                             method: 'POST',
                             body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
                         });
 
                         if (!response.ok) {
@@ -1532,7 +1535,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json', // Minta balasan berupa JSON agar tidak error parsing HTML
+                        'Accept': 'application/json',
                     },
                     body: JSON.stringify(newProduct)
                 })
