@@ -225,6 +225,80 @@
             text-decoration: underline;
         }
 
+        /* Modal Popup */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-box {
+            background: #fff;
+            width: calc(100% - 40px);
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.show .modal-box {
+            transform: translateY(0) scale(1);
+        }
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            background: #dcfce7;
+            color: #15803d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+        .modal-desc {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+        .btn-modal {
+            width: 100%;
+            padding: 14px;
+            background-color: #00B050;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+        .btn-modal:hover {
+            background-color: #009643;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 20px 15px;
@@ -327,6 +401,18 @@
         </div>
     </div>
 
+    <!-- Modal Registration Success -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h3 class="modal-title">Pendaftaran Berhasil!</h3>
+            <p class="modal-desc">Akun kemitraan Anda telah sukses dibuat. Silakan masuk dengan akun yang baru saja Anda daftarkan.</p>
+            <a href="/" class="btn-modal">Menuju Halaman Login</a>
+        </div>
+    </div>
+
     <script>
         document.getElementById('btn-register').addEventListener('click', function(e) {
             e.preventDefault();
@@ -344,8 +430,8 @@
             const user = { name, whatsapp, mitra, email, password, role: 'member' };
             localStorage.setItem('registeredUser', JSON.stringify(user));
             
-            alert('Pendaftaran berhasil! Silakan login dengan akun yang Anda daftarkan.');
-            window.location.href='/';
+            // Show custom modal popup instead of alert
+            document.getElementById('successModal').classList.add('show');
         });
 
         function togglePasswordVisibility(inputId, iconSpan) {
