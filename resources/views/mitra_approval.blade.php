@@ -107,6 +107,7 @@
         .btn-act:hover { opacity: 0.9; }
         .btn-approve { background: var(--tk-green); }
         .btn-reject { background: var(--tk-red); }
+        .btn-delete { background: var(--tk-text-sec); }
 
         .actions-group {
             display: flex;
@@ -238,14 +239,15 @@
                             @endif
                         </td>
                         <td style="text-align: right;">
-                            @if($mitra->status == 'pending')
                             <div class="actions-group" style="justify-content: flex-end;">
-                                <button class="btn-act btn-approve" onclick="actionMitra({{ $mitra->id }}, 'approve')">Setujui</button>
-                                <button class="btn-act btn-reject" onclick="actionMitra({{ $mitra->id }}, 'reject')">Tolak</button>
+                                @if($mitra->status == 'pending')
+                                    <button class="btn-act btn-approve" onclick="actionMitra({{ $mitra->id }}, 'approve')">Setujui</button>
+                                    <button class="btn-act btn-reject" onclick="actionMitra({{ $mitra->id }}, 'reject')">Tolak</button>
+                                @else
+                                    <span style="color: var(--tk-text-third); font-size: 12px; margin-top: 6px; margin-right: 8px;">Telah diproses</span>
+                                @endif
+                                <button class="btn-act btn-delete" onclick="deleteMitra({{ $mitra->id }})">Hapus</button>
                             </div>
-                            @else
-                            <span style="color: var(--tk-text-third); font-size: 12px;">Telah diproses</span>
-                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -276,6 +278,31 @@
             .then(data => {
                 if (data.success) {
                     alert('Berhasil memperbarui status mitra.');
+                    window.location.reload();
+                } else {
+                    alert('Terjadi kesalahan: ' + data.error);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Gagal menghubungi server.');
+            });
+        }
+    }
+
+    function deleteMitra(id) {
+        if (confirm('Anda yakin ingin menghapus data mitra ini secara permanen?')) {
+            fetch(`/mitra/${id}/delete?role={{ $role }}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Data mitra berhasil dihapus.');
                     window.location.reload();
                 } else {
                     alert('Terjadi kesalahan: ' + data.error);

@@ -150,6 +150,7 @@ use App\Http\Controllers\MitraController;
 Route::get('/mitra', [MitraController::class, 'index']);
 Route::post('/mitra/{id}/approve', [MitraController::class, 'approve']);
 Route::post('/mitra/{id}/reject', [MitraController::class, 'reject']);
+Route::delete('/mitra/{id}/delete', [MitraController::class, 'destroy']);
 
 Route::get('/cart', function () {
     $role = request()->query('role', 'member');

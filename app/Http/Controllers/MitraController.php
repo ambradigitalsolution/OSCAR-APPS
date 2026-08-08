@@ -51,4 +51,17 @@ class MitraController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $role = $request->query('role', 'member');
+        if (strtolower($role) !== 'owner') {
+            return response()->json(['success' => false, 'error' => 'Unauthorized'], 403);
+        }
+
+        $mitra = Mitra::findOrFail($id);
+        $mitra->delete();
+
+        return response()->json(['success' => true]);
+    }
 }
