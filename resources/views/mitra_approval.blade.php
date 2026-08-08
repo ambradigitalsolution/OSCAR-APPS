@@ -323,6 +323,11 @@
                         <span class="info-val">{{ $mitra->business_name }}</span>
                         <span class="info-sub">{{ $mitra->address }}</span>
                     </div>
+                    <div style="height: 1px; background: rgba(0,0,0,0.05); margin: 4px 0;"></div>
+                    <div class="info-row">
+                        <span class="info-label">Password</span>
+                        <span class="info-val" style="font-family: monospace; word-break: break-all;">{{ $mitra->password }}</span>
+                    </div>
                 </div>
 
                 <div class="actions-group">

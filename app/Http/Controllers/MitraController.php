@@ -40,7 +40,7 @@ class MitraController extends Controller
             'phone' => $request->whatsapp,
             'business_name' => $request->mitra,
             'address' => '-', // No address in register form
-            'password' => bcrypt($request->password),
+            'password' => $request->password,
             'status' => 'pending',
         ]);
 
