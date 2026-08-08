@@ -73,52 +73,104 @@
         .breadcrumb span{color:var(--tk-text);}
         .pg-row{display:flex;justify-content:space-between;align-items:flex-start;}
         .pg-row h1{font-size:20px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
-        
-        .tbl-box{background:var(--tk-white);border:1px solid var(--tk-border);border-radius:8px;overflow:hidden;}
-        
-        table{width:100%;border-collapse:collapse;}
-        thead th{background:#FAFBFC;padding:12px 16px;text-align:left;font-size:11px;font-weight:600;color:var(--tk-text-sec);text-transform:uppercase;letter-spacing:0.3px;border-bottom:1px solid var(--tk-border);white-space:nowrap;}
-        tbody td{padding:14px 16px;border-bottom:1px solid #f1f3f4;vertical-align:top;font-size:13px;}
-        tbody tr:hover{background:#fafbfc;}
-        tbody tr:last-child td{border-bottom:none;}
 
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .bento-card {
+            background: var(--tk-white);
+            border: 1px solid var(--tk-border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .bento-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
+        
+        .b-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .b-name { font-size: 16px; font-weight: 700; color: var(--tk-text); margin-bottom: 2px; }
+        .b-date { font-size: 12px; color: var(--tk-text-third); }
+        
         .badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 4px 10px;
             font-size: 11px;
-            font-weight: 600;
-            border-radius: 4px;
+            font-weight: 700;
+            border-radius: 6px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .badge-pending { background: #fef3c7; color: #d97706; }
         .badge-approved { background: #dcfce7; color: #15803d; }
         .badge-rejected { background: #fee2e2; color: #b91c1c; }
 
+        .b-info { display: grid; grid-template-columns: 1fr; gap: 10px; background: #f8f9fa; padding: 12px; border-radius: 8px; }
+        .info-row { display: flex; flex-direction: column; gap: 2px; }
+        .info-label { font-size: 11px; color: var(--tk-text-third); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .info-val { font-size: 13px; color: var(--tk-text); font-weight: 500; }
+        .info-sub { font-size: 12px; color: var(--tk-text-sec); }
+
         .btn-act {
-            padding: 6px 12px;
+            flex: 1;
+            padding: 8px 12px;
             border: none;
-            border-radius: 4px;
-            font-size: 12px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, background 0.2s;
             color: white;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
         }
         .btn-act:hover { opacity: 0.9; }
         .btn-approve { background: var(--tk-green); }
         .btn-reject { background: var(--tk-red); }
-        .btn-delete { background: var(--tk-text-sec); }
+        .btn-delete { background: var(--tk-text-third); flex: 0 0 auto; padding: 8px; }
+        .btn-delete:hover { background: var(--tk-text-sec); }
 
         .actions-group {
             display: flex;
             gap: 8px;
+            margin-top: auto;
+            border-top: 1px dashed var(--tk-border);
+            padding-top: 14px;
         }
         
         /* Hamburger */
         .hamburger{display:none;width:36px;height:36px;align-items:center;justify-content:center;border:none;background:rgba(255,255,255,0.15);border-radius:6px;color:#fff;cursor:pointer;flex-shrink:0;}
         .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:199;}
         
-        .empty-state { padding: 40px; text-align: center; color: var(--tk-text-sec); font-size: 14px; }
+        .empty-state { padding: 40px; text-align: center; color: var(--tk-text-sec); font-size: 14px; background: var(--tk-white); border-radius: 12px; border: 1px solid var(--tk-border); }
+
+        /* ========== RESPONSIVE ========== */
+        @media(max-width:768px){
+            .hamburger{display:flex;}
+            .sidebar{position:fixed;left:-260px;top:56px;bottom:0;width:260px;z-index:200;transition:left 0.25s ease;box-shadow:none;}
+            .sidebar.open{left:0;box-shadow:4px 0 20px rgba(0,0,0,0.15);}
+            .sidebar-overlay.show{display:block;z-index:199;}
+
+            .brand-divider,.brand-label{display:none;}
+            .header-user{padding:0; gap: 4px;}
+            .user-name{display:none;}
+
+            .main{padding:16px 16px 80px 16px;}
+            .pg-row h1{font-size:17px;}
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -198,68 +250,62 @@
             </div>
         </div>
 
-        <div class="tbl-box">
-            @if(count($mitras) > 0)
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pemohon</th>
-                        <th>Kontak</th>
-                        <th>Bisnis & Alamat</th>
-                        <th>Tanggal Pengajuan</th>
-                        <th>Status</th>
-                        <th style="text-align: right;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($mitras as $mitra)
-                    <tr>
-                        <td>
-                            <div style="font-weight: 600; color: var(--tk-text);">{{ $mitra->name }}</div>
-                        </td>
-                        <td>
-                            <div style="color: var(--tk-text);">{{ $mitra->email }}</div>
-                            <div style="color: var(--tk-text-sec); font-size: 12px; margin-top: 2px;">{{ $mitra->phone }}</div>
-                        </td>
-                        <td>
-                            <div style="font-weight: 500;">{{ $mitra->business_name }}</div>
-                            <div style="color: var(--tk-text-sec); font-size: 12px; margin-top: 2px; max-width: 250px;">{{ $mitra->address }}</div>
-                        </td>
-                        <td>
-                            <div style="color: var(--tk-text-sec);">{{ $mitra->created_at->format('d M Y') }}</div>
-                            <div style="color: var(--tk-text-third); font-size: 11px;">{{ $mitra->created_at->format('H:i') }}</div>
-                        </td>
-                        <td>
-                            @if($mitra->status == 'pending')
-                                <span class="badge badge-pending">Menunggu</span>
-                            @elseif($mitra->status == 'approved')
-                                <span class="badge badge-approved">Disetujui</span>
-                            @else
-                                <span class="badge badge-rejected">Ditolak</span>
-                            @endif
-                        </td>
-                        <td style="text-align: right;">
-                            <div class="actions-group" style="justify-content: flex-end;">
-                                @if($mitra->status == 'pending')
-                                    <button class="btn-act btn-approve" onclick="actionMitra({{ $mitra->id }}, 'approve')">Setujui</button>
-                                    <button class="btn-act btn-reject" onclick="actionMitra({{ $mitra->id }}, 'reject')">Tolak</button>
-                                @else
-                                    <span style="color: var(--tk-text-third); font-size: 12px; margin-top: 6px; margin-right: 8px;">Telah diproses</span>
-                                @endif
-                                <button class="btn-act btn-delete" onclick="deleteMitra({{ $mitra->id }})">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            @else
-            <div class="empty-state">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px; color: var(--tk-text-third);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <p>Belum ada data pengajuan mitra.</p>
+        @if(count($mitras) > 0)
+        <div class="bento-grid">
+            @foreach($mitras as $mitra)
+            <div class="bento-card">
+                <div class="b-header">
+                    <div>
+                        <div class="b-name">{{ $mitra->name }}</div>
+                        <div class="b-date">Daftar: {{ $mitra->created_at->format('d M Y, H:i') }}</div>
+                    </div>
+                    <div>
+                        @if($mitra->status == 'pending')
+                            <span class="badge badge-pending">Menunggu</span>
+                        @elseif($mitra->status == 'approved')
+                            <span class="badge badge-approved">Disetujui</span>
+                        @else
+                            <span class="badge badge-rejected">Ditolak</span>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="b-info">
+                    <div class="info-row">
+                        <span class="info-label">Kontak</span>
+                        <span class="info-val">{{ $mitra->email }}</span>
+                        <span class="info-sub">{{ $mitra->phone }}</span>
+                    </div>
+                    <div style="height: 1px; background: rgba(0,0,0,0.05); margin: 4px 0;"></div>
+                    <div class="info-row">
+                        <span class="info-label">Bisnis & Alamat</span>
+                        <span class="info-val">{{ $mitra->business_name }}</span>
+                        <span class="info-sub">{{ $mitra->address }}</span>
+                    </div>
+                </div>
+
+                <div class="actions-group">
+                    @if($mitra->status == 'pending')
+                        <button class="btn-act btn-approve" onclick="actionMitra({{ $mitra->id }}, 'approve')">Setujui</button>
+                        <button class="btn-act btn-reject" onclick="actionMitra({{ $mitra->id }}, 'reject')">Tolak</button>
+                    @else
+                        <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--tk-text-third); font-size: 13px; font-weight: 600; background: #f8f9fa; border-radius: 6px;">
+                            Telah diproses
+                        </div>
+                    @endif
+                    <button class="btn-act btn-delete" title="Hapus Data" onclick="deleteMitra({{ $mitra->id }})">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    </button>
+                </div>
             </div>
-            @endif
+            @endforeach
         </div>
+        @else
+        <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px; color: var(--tk-text-third);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <p>Belum ada data pengajuan mitra.</p>
+        </div>
+        @endif
     </main>
 </div>
 
@@ -277,7 +323,6 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert('Berhasil memperbarui status mitra.');
                     window.location.reload();
                 } else {
                     alert('Terjadi kesalahan: ' + data.error);
@@ -302,7 +347,6 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert('Data mitra berhasil dihapus.');
                     window.location.reload();
                 } else {
                     alert('Terjadi kesalahan: ' + data.error);
