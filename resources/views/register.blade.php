@@ -161,6 +161,31 @@
             box-shadow: 0 0 0 4px rgba(0, 176, 80, 0.1);
         }
 
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            cursor: pointer;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #0f172a;
+        }
+
+        .password-wrapper .form-control {
+            padding-right: 44px;
+        }
+
         .btn-login {
             width: 100%;
             padding: 14px;
@@ -275,11 +300,21 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                            <span class="toggle-password" onclick="togglePasswordVisibility('password', this)" title="Tampilkan Password">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="••••••••" required>
+                        <div class="password-wrapper">
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="••••••••" required>
+                            <span class="toggle-password" onclick="togglePasswordVisibility('password_confirmation', this)" title="Tampilkan Password">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -312,6 +347,17 @@
             alert('Pendaftaran berhasil! Silakan login dengan akun yang Anda daftarkan.');
             window.location.href='/';
         });
+
+        function togglePasswordVisibility(inputId, iconSpan) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconSpan.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+            } else {
+                input.type = 'password';
+                iconSpan.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            }
+        }
     </script>
 
 </body>
