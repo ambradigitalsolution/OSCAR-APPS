@@ -153,6 +153,47 @@
         
         .empty-state { padding: 40px; text-align: center; color: var(--tk-text-sec); font-size: 14px; background: var(--tk-white); border-radius: 12px; border: 1px solid var(--tk-border); }
 
+        /* Modal Confirmation */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+            z-index: 999; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal-box {
+            background: #fff; width: calc(100% - 40px); max-width: 380px;
+            border-radius: 20px; padding: 24px; text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.show .modal-box { transform: translateY(0) scale(1); }
+        .modal-icon {
+            width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; margin: 0 auto 16px;
+        }
+        .modal-icon.warning { background: #fef3c7; color: #d97706; }
+        .modal-icon.danger { background: #fee2e2; color: #dc2626; }
+        .modal-icon.success { background: #dcfce7; color: #16a34a; }
+        
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+        .modal-desc { font-size: 0.95rem; color: #64748b; margin-bottom: 24px; line-height: 1.5; }
+        
+        .modal-actions { display: flex; gap: 12px; }
+        .btn-modal {
+            flex: 1; padding: 12px; border: none; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-modal-cancel { background: #f1f5f9; color: #475569; }
+        .btn-modal-cancel:hover { background: #e2e8f0; }
+        .btn-modal-confirm { color: white; }
+        .btn-modal-confirm.approve { background: var(--tk-green); }
+        .btn-modal-confirm.approve:hover { background: #16a34a; }
+        .btn-modal-confirm.reject { background: var(--tk-red); }
+        .btn-modal-confirm.reject:hover { background: #dc2626; }
+        .btn-modal-confirm.delete { background: var(--tk-text-sec); }
+        .btn-modal-confirm.delete:hover { background: #475569; }
+
         /* ========== RESPONSIVE ========== */
         @media(max-width:768px){
             .hamburger{display:flex;}
@@ -309,54 +350,129 @@
     </main>
 </div>
 
+<!-- Generic Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-icon" id="modalIcon">
+            <!-- SVG injected via JS -->
+        </div>
+        <h3 class="modal-title" id="modalTitle">Konfirmasi</h3>
+        <p class="modal-desc" id="modalDesc">Apakah Anda yakin?</p>
+        <div class="modal-actions">
+            <button class="btn-modal btn-modal-cancel" onclick="closeModal()">Batal</button>
+            <button class="btn-modal btn-modal-confirm" id="modalConfirmBtn">Ya, Lanjutkan</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    function actionMitra(id, type) {
-        let confirmMsg = type === 'approve' ? 'Anda yakin ingin menyetujui pengajuan mitra ini?' : 'Anda yakin ingin menolak pengajuan mitra ini?';
-        if (confirm(confirmMsg)) {
-            fetch(`/mitra/${id}/${type}?role={{ $role }}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else {
-                    alert('Terjadi kesalahan: ' + data.error);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Gagal menghubungi server.');
-            });
+    let currentActionId = null;
+    let currentActionType = null;
+
+    const icons = {
+        approve: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+        reject: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+        delete: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>'
+    };
+
+    function showModal(id, type) {
+        currentActionId = id;
+        currentActionType = type;
+        
+        const modal = document.getElementById('confirmModal');
+        const iconDiv = document.getElementById('modalIcon');
+        const title = document.getElementById('modalTitle');
+        const desc = document.getElementById('modalDesc');
+        const confirmBtn = document.getElementById('modalConfirmBtn');
+        
+        // Reset classes
+        iconDiv.className = 'modal-icon';
+        confirmBtn.className = 'btn-modal btn-modal-confirm';
+        
+        if (type === 'approve') {
+            iconDiv.innerHTML = icons.approve;
+            iconDiv.classList.add('success');
+            title.innerText = 'Setujui Pengajuan';
+            desc.innerText = 'Anda yakin ingin menyetujui pengajuan mitra ini? Mereka akan mendapatkan akses sebagai mitra yang sah.';
+            confirmBtn.innerText = 'Ya, Setujui';
+            confirmBtn.classList.add('approve');
+        } else if (type === 'reject') {
+            iconDiv.innerHTML = icons.reject;
+            iconDiv.classList.add('danger');
+            title.innerText = 'Tolak Pengajuan';
+            desc.innerText = 'Anda yakin ingin menolak pengajuan mitra ini? Status mereka akan ditandai sebagai ditolak.';
+            confirmBtn.innerText = 'Ya, Tolak';
+            confirmBtn.classList.add('reject');
+        } else if (type === 'delete') {
+            iconDiv.innerHTML = icons.delete;
+            iconDiv.classList.add('warning');
+            title.innerText = 'Hapus Data';
+            desc.innerText = 'Anda yakin ingin menghapus data mitra ini secara permanen? Data yang telah dihapus tidak dapat dipulihkan.';
+            confirmBtn.innerText = 'Ya, Hapus';
+            confirmBtn.classList.add('delete');
         }
+        
+        modal.classList.add('show');
+    }
+
+    function closeModal() {
+        document.getElementById('confirmModal').classList.remove('show');
+        currentActionId = null;
+        currentActionType = null;
+    }
+
+    document.getElementById('modalConfirmBtn').addEventListener('click', function() {
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Memproses...';
+        btn.style.opacity = '0.7';
+        btn.disabled = true;
+
+        let url = '';
+        let method = 'POST';
+
+        if (currentActionType === 'delete') {
+            url = `/mitra/${currentActionId}/delete?role={{ $role }}`;
+            method = 'DELETE';
+        } else {
+            url = `/mitra/${currentActionId}/${currentActionType}?role={{ $role }}`;
+        }
+
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Terjadi kesalahan: ' + data.error);
+                closeModal();
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Gagal menghubungi server.');
+            closeModal();
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.disabled = false;
+        });
+    });
+
+    function actionMitra(id, type) {
+        showModal(id, type);
     }
 
     function deleteMitra(id) {
-        if (confirm('Anda yakin ingin menghapus data mitra ini secara permanen?')) {
-            fetch(`/mitra/${id}/delete?role={{ $role }}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else {
-                    alert('Terjadi kesalahan: ' + data.error);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Gagal menghubungi server.');
-            });
-        }
+        showModal(id, 'delete');
     }
 </script>
 </body>
