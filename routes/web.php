@@ -145,6 +145,12 @@ use App\Http\Controllers\CategoryController;
 Route::get('/settings/category', [CategoryController::class, 'index']);
 Route::post('/settings/category', [CategoryController::class, 'update']);
 
+use App\Http\Controllers\MitraController;
+
+Route::get('/mitra', [MitraController::class, 'index']);
+Route::post('/mitra/{id}/approve', [MitraController::class, 'approve']);
+Route::post('/mitra/{id}/reject', [MitraController::class, 'reject']);
+
 Route::get('/cart', function () {
     $role = request()->query('role', 'member');
     return view('cart', compact('role'));
