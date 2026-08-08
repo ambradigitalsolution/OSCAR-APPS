@@ -408,7 +408,7 @@
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
             <h3 class="modal-title">Pendaftaran Berhasil!</h3>
-            <p class="modal-desc">Akun kemitraan Anda telah sukses dibuat. Silakan masuk dengan akun yang baru saja Anda daftarkan.</p>
+            <p class="modal-desc">Terima kasih telah mendaftar. Akun Anda saat ini sedang <strong>menunggu persetujuan admin</strong>. Kami akan segera memproses pengajuan Anda.</p>
             <a href="/" class="btn-modal">Menuju Halaman Login</a>
         </div>
     </div>
