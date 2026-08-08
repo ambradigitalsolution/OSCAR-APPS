@@ -87,4 +87,49 @@ class MitraController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function login(Request $request)
+    {
+        $email = $request->email;
+        $password = $request->password;
+
+        if ($email === 'owner@oscar.com' && $password === 'admin123') {
+            return response()->json([
+                'success' => true, 
+                'role' => 'owner', 
+                'user' => ['name' => 'Owner', 'email' => 'owner@oscar.com', 'role' => 'owner', 'mitra' => 'Oscar Pusat', 'whatsapp' => '-']
+            ]);
+        }
+
+        if ($email === 'member@oscar.com' && $password === 'user123') {
+            return response()->json([
+                'success' => true, 
+                'role' => 'member', 
+                'user' => ['name' => 'Member', 'email' => 'member@oscar.com', 'role' => 'member', 'mitra' => 'Mitra Default', 'whatsapp' => '-']
+            ]);
+        }
+
+        $mitra = Mitra::where('email', $email)->first();
+        if ($mitra) {
+            if ($mitra->password !== $password) {
+                return response()->json(['success' => false, 'message' => 'Password salah!']);
+            }
+            if ($mitra->status !== 'approved') {
+                return response()->json(['success' => false, 'message' => 'Akun mitra Anda belum disetujui.']);
+            }
+            return response()->json([
+                'success' => true, 
+                'role' => 'member', 
+                'user' => [
+                    'name' => $mitra->name, 
+                    'email' => $mitra->email, 
+                    'role' => 'member', 
+                    'mitra' => $mitra->business_name, 
+                    'whatsapp' => $mitra->phone
+                ]
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Email atau password salah!']);
+    }
 }

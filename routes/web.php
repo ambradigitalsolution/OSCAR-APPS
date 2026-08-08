@@ -147,6 +147,7 @@ Route::post('/settings/category', [CategoryController::class, 'update']);
 
 use App\Http\Controllers\MitraController;
 
+Route::post('/login/submit', [MitraController::class, 'login']);
 Route::get('/mitra', [MitraController::class, 'index']);
 Route::post('/mitra/register', [MitraController::class, 'store']);
 Route::post('/mitra/{id}/approve', [MitraController::class, 'approve']);
