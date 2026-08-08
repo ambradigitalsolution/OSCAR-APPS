@@ -24,6 +24,29 @@ class MitraController extends Controller
         return view('mitra_approval', compact('mitras', 'role'));
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'whatsapp' => 'required|string|max:20',
+            'mitra' => 'required|string|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+
+        Mitra::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->whatsapp,
+            'business_name' => $request->mitra,
+            'address' => '-', // No address in register form
+            'password' => bcrypt($request->password),
+            'status' => 'pending',
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
     public function approve(Request $request, $id)
     {
         $role = $request->query('role', 'member');

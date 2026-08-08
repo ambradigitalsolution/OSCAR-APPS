@@ -427,11 +427,30 @@
                 return;
             }
 
-            const user = { name, whatsapp, mitra, email, password, role: 'member' };
-            localStorage.setItem('registeredUser', JSON.stringify(user));
+            const user = { name, whatsapp, mitra, email, password };
             
-            // Show custom modal popup instead of alert
-            document.getElementById('successModal').classList.add('show');
+            // Send to backend
+            fetch('/mitra/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Show custom modal popup instead of alert
+                    document.getElementById('successModal').classList.add('show');
+                } else {
+                    alert('Terjadi kesalahan saat pendaftaran.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Gagal menghubungi server.');
+            });
         });
 
         function togglePasswordVisibility(inputId, iconSpan) {

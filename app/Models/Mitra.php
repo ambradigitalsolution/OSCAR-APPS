@@ -16,5 +16,6 @@ class Mitra extends Model
         'business_name',
         'address',
         'status',
+        'password',
     ];
 }
