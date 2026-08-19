@@ -1051,24 +1051,33 @@
                                 return;
                             }
 
-                            // Auto-crop to 1:1 square from center
-                            const cropSize = Math.min(img.width, img.height);
-                            const cropX = Math.round((img.width - cropSize) / 2);
-                            const cropY = Math.round((img.height - cropSize) / 2);
-
+                            // Auto-pad to 1:1 square with white background
+                            const maxDim = Math.max(img.width, img.height);
+                            
                             // Calculate output size (max 800x800)
-                            const outputSize = Math.min(cropSize, MAX_WIDTH);
+                            const outputSize = Math.min(maxDim, MAX_WIDTH);
+                            const scale = outputSize / maxDim;
 
-                            // Create canvas and draw cropped square image
+                            const drawWidth = img.width * scale;
+                            const drawHeight = img.height * scale;
+                            
+                            const drawX = (outputSize - drawWidth) / 2;
+                            const drawY = (outputSize - drawHeight) / 2;
+
+                            // Create canvas and draw padded square image
                             const canvas = document.createElement('canvas');
                             canvas.width = outputSize;
                             canvas.height = outputSize;
                             const ctx = canvas.getContext('2d');
 
+                            // Fill background with white
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fillRect(0, 0, outputSize, outputSize);
+
                             // Use high quality image smoothing
                             ctx.imageSmoothingEnabled = true;
                             ctx.imageSmoothingQuality = 'high';
-                            ctx.drawImage(img, cropX, cropY, cropSize, cropSize, 0, 0, outputSize, outputSize);
+                            ctx.drawImage(img, 0, 0, img.width, img.height, drawX, drawY, drawWidth, drawHeight);
 
                             // Try WebP first, fallback to JPEG
                             let outputType = 'image/webp';
