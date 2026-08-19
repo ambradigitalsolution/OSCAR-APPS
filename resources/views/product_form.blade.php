@@ -957,7 +957,7 @@
                     </svg>
                     <span class="photo-label">${isMain ? 'Foto Utama' : 'Foto ' + (index + 1)}</span>
                     <input type="file" accept="image/*" capture="environment" class="camera-input" style="display:none">
-                    <input type="file" accept="image/*" class="gallery-input" style="display:none">
+                    <input type="file" accept="image/*" class="gallery-input" style="display:none" multiple>
                     <div class="camera-action-btns" id="cameraActions${index}">
                         <button type="button" class="camera-action-btn" data-action="camera">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/></svg>
@@ -1381,9 +1381,29 @@
             // Handle file input change (both camera-input and gallery-input)
             photoGrid.addEventListener('change', function(e) {
                 if (e.target.type !== 'file') return;
-                const box = e.target.closest('.photo-box');
-                const file = e.target.files[0];
-                if (box && file) handleFileSelect(box, file);
+                const startingBox = e.target.closest('.photo-box');
+                const files = e.target.files;
+                if (!startingBox || files.length === 0) return;
+
+                let fileIndex = 0;
+
+                if (!startingBox.classList.contains('has-photo')) {
+                    handleFileSelect(startingBox, files[fileIndex]);
+                    fileIndex++;
+                }
+
+                const allBoxes = Array.from(document.querySelectorAll('.photo-box'));
+                let nextBoxIndex = allBoxes.indexOf(startingBox) + 1;
+
+                while (fileIndex < files.length && nextBoxIndex < allBoxes.length) {
+                    if (!allBoxes[nextBoxIndex].classList.contains('has-photo')) {
+                        handleFileSelect(allBoxes[nextBoxIndex], files[fileIndex]);
+                        fileIndex++;
+                    }
+                    nextBoxIndex++;
+                }
+                
+                e.target.value = '';
             });
 
             // Drag & drop support (desktop)
@@ -1402,12 +1422,28 @@
 
             photoGrid.addEventListener('drop', function(e) {
                 e.preventDefault();
-                const box = e.target.closest('.photo-box');
-                if (box) {
-                    box.classList.remove('dragging');
-                    if (!box.classList.contains('has-photo')) {
-                        const file = e.dataTransfer.files[0];
-                        if (file) handleFileSelect(box, file);
+                const startingBox = e.target.closest('.photo-box');
+                if (startingBox) {
+                    startingBox.classList.remove('dragging');
+                    const files = e.dataTransfer.files;
+                    if (files.length === 0) return;
+
+                    let fileIndex = 0;
+
+                    if (!startingBox.classList.contains('has-photo')) {
+                        handleFileSelect(startingBox, files[fileIndex]);
+                        fileIndex++;
+                    }
+
+                    const allBoxes = Array.from(document.querySelectorAll('.photo-box'));
+                    let nextBoxIndex = allBoxes.indexOf(startingBox) + 1;
+
+                    while (fileIndex < files.length && nextBoxIndex < allBoxes.length) {
+                        if (!allBoxes[nextBoxIndex].classList.contains('has-photo')) {
+                            handleFileSelect(allBoxes[nextBoxIndex], files[fileIndex]);
+                            fileIndex++;
+                        }
+                        nextBoxIndex++;
                     }
                 }
             });
