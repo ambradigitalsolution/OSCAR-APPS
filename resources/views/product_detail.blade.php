@@ -392,6 +392,10 @@
     }
 
     /* Right: Checkout Box */
+    .bento-checkout {
+        padding: 24px;
+    }
+
     .checkout-box {
         position: sticky;
         top: 100px;
@@ -401,23 +405,24 @@
 
     .checkout-title {
         font-weight: 700;
-        font-size: 1.1rem;
+        font-size: 1rem;
         margin-bottom: 16px;
+        line-height: 1.4;
     }
 
     .qty-selector {
         display: flex;
         align-items: center;
         border: 1px solid var(--border-color);
-        border-radius: 12px;
+        border-radius: 10px;
         overflow: hidden;
-        margin-bottom: 24px;
-        width: fit-content;
+        margin-bottom: 20px;
+        width: 100%;
     }
 
     .qty-btn {
         width: 40px;
-        height: 40px;
+        height: 38px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -434,8 +439,9 @@
     }
 
     .qty-input {
-        width: 50px;
-        height: 40px;
+        flex: 1;
+        width: auto;
+        height: 38px;
         border: none;
         text-align: center;
         font-weight: 700;
@@ -489,13 +495,13 @@
 
     .btn-buy {
         width: 100%;
-        padding: 14px;
+        padding: 12px;
         background: var(--primary);
         color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: 0.95rem;
         cursor: pointer;
         transition: all 0.2s;
     }
@@ -508,13 +514,13 @@
 
     .btn-cart {
         width: 100%;
-        padding: 14px;
+        padding: 12px;
         background: var(--white);
         color: var(--primary);
         border: 1px solid var(--primary);
-        border-radius: 12px;
+        border-radius: 10px;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: 0.95rem;
         cursor: pointer;
         transition: all 0.2s;
     }
@@ -524,8 +530,8 @@
     }
     
     .store-info {
-        margin-top: 24px;
-        padding-top: 24px;
+        margin-top: 20px;
+        padding-top: 20px;
         border-top: 1px solid var(--border-color);
         display: flex;
         align-items: center;
@@ -533,21 +539,29 @@
     }
     
     .store-avatar {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         background: var(--primary-light);
         display: flex;
         align-items: center;
         justify-content: center;
         color: var(--primary);
+        flex-shrink: 0;
+    }
+    
+    .store-details {
+        overflow: hidden;
     }
     
     .store-details h4 {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-weight: 700;
         color: var(--dark);
         margin-bottom: 2px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     
     .store-details p {
