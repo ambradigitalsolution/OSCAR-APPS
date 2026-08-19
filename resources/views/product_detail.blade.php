@@ -629,7 +629,7 @@
                     </div>
                     <div class="desc-content">
                         @if($product->description)
-                            {!! nl2br(e($product->description)) !!}
+                            {!! $product->description !!}
                         @else
                             <p style="color: #94a3b8; font-style: italic;">Belum ada deskripsi untuk produk ini.</p>
                         @endif
