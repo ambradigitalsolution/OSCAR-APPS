@@ -316,7 +316,7 @@
         .photo-box img.photo-preview {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 6px;
             position: absolute;
             top: 0;
