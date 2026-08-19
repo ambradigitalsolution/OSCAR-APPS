@@ -29,7 +29,7 @@
 
     .bento-product-grid {
         display: grid;
-        grid-template-columns: 400px 1fr 320px;
+        grid-template-columns: 480px 1fr 280px;
         gap: 24px;
         align-items: start;
     }
